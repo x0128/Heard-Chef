@@ -1,0 +1,15 @@
+CompileFlags:
+  CompilationDatabase: build/debug
+  Add:
+    - -Wno-missing-field-initializers
+
+Index:
+  Background: Build
+
+Diagnostics:
+  ClangTidy:
+    Add:
+      - performance-*
+
+Completion:
+  HeaderInsertion: Never

@@ -1,0 +1,12 @@
+[
+  {
+    "label": "game (debug)",
+    "adapter": "CodeLLDB",
+    "request": "launch",
+    "build": "build (debug)",
+    "program": "$ZED_WORKTREE_ROOT/build/debug/bin/game.exe",
+    "cwd": "$ZED_WORKTREE_ROOT/build/debug/bin",
+    "args": [],
+    "stopOnEntry": false
+  }
+]
