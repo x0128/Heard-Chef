@@ -8,5 +8,15 @@
     "cwd": "$ZED_WORKTREE_ROOT/build/debug/bin",
     "args": [],
     "stopOnEntry": false
+  },
+  {
+    "label": "game (hot reload)",
+    "adapter": "CodeLLDB",
+    "request": "launch",
+    "build": "hot reload: build",
+    "program": "$ZED_WORKTREE_ROOT/build/hot-reload/bin/game_hot_reload.exe",
+    "cwd": "$ZED_WORKTREE_ROOT/build/hot-reload/bin",
+    "args": [],
+    "stopOnEntry": false
   }
 ]

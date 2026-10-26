@@ -28,6 +28,14 @@
       }
     },
     {
+      "name": "hot-reload",
+      "inherits": "desktop",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "GAME_HOT_RELOAD": "ON"
+      }
+    },
+    {
       "name": "release",
       "inherits": "desktop",
       "cacheVariables": {
@@ -39,6 +47,10 @@
     {
       "name": "debug",
       "configurePreset": "debug"
+    },
+    {
+      "name": "hot-reload",
+      "configurePreset": "hot-reload"
     },
     {
       "name": "release",

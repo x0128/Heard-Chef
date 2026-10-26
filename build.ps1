@@ -12,21 +12,37 @@ function Enter-VsShell {
     Enter-VsDevShell -VsInstallPath $Vs -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64" | Out-Null
 }
 
-Enter-VsShell
-
-if (-not (Test-Path "build/$Preset/build.ninja")) {
-    cmake --preset $Preset
+function Invoke-Checked([scriptblock]$Command) {
+    & $Command
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }
 }
 
-cmake --build --preset $Preset
-if ($LASTEXITCODE -ne 0) {
-    exit $LASTEXITCODE
+Enter-VsShell
+
+$Bin = "build/$Preset/bin"
+$HotReload = $Preset -eq "hot-reload"
+
+if ($HotReload -and (Get-Process game_hot_reload -ErrorAction SilentlyContinue)) {
+    $Lock = "$Bin/game.lock"
+    New-Item -ItemType File -Force $Lock | Out-Null
+    try {
+        cmake --build --preset $Preset --target game
+        $Code = $LASTEXITCODE
+    } finally {
+        Remove-Item $Lock -ErrorAction SilentlyContinue
+    }
+    exit $Code
 }
 
+if (-not (Test-Path "build/$Preset/build.ninja")) {
+    Invoke-Checked { cmake --preset $Preset }
+}
+Invoke-Checked { cmake --build --preset $Preset }
+
 if ($Run) {
-    Start-Process -FilePath "build/$Preset/bin/game.exe" -WorkingDirectory "build/$Preset/bin"
+    $Exe = if ($HotReload) { "game_hot_reload.exe" } else { "game.exe" }
+    Start-Process -FilePath "$Bin/$Exe" -WorkingDirectory $Bin
 }
 exit 0
