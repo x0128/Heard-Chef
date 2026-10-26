@@ -30,6 +30,7 @@ FetchContent_MakeAvailable(raylib)
 file(GLOB CORE_SOURCES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/core/*.cpp)
 list(FILTER CORE_SOURCES EXCLUDE REGEX ".*/main_[a-z_]+\\.cpp$")
 file(GLOB GAME_SOURCES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/game/*.cpp)
+file(GLOB_RECURSE ASSET_FILES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/assets/*)
 
 add_custom_target(
     copy_assets
@@ -56,7 +57,7 @@ if(EMSCRIPTEN)
         --preload-file ${CMAKE_SOURCE_DIR}/assets@assets
         --shell-file ${CMAKE_SOURCE_DIR}/web/index.html
     )
-    set_property(TARGET index APPEND PROPERTY LINK_DEPENDS ${CMAKE_SOURCE_DIR}/web/index.html)
+    set_property(TARGET index APPEND PROPERTY LINK_DEPENDS ${CMAKE_SOURCE_DIR}/web/index.html ${ASSET_FILES})
 elseif(GAME_HOT_RELOAD)
     add_library(game SHARED ${CORE_SOURCES} ${GAME_SOURCES})
     target_compile_definitions(game PRIVATE GAME_DLL USE_LIBTYPE_SHARED)
