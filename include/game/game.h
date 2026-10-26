@@ -2,8 +2,10 @@
 
 #include "core/input.h"
 #include "core/loop.h"
+#include "core/scenes.h"
 #include "core/types.h"
 #include "game/play.h"
+#include "game/title.h"
 
 constexpr const char* GAME_TITLE = "GAME TITLE";
 constexpr const char* SAVE_FILE = "game_save.bin";
@@ -15,6 +17,8 @@ struct game_state {
     stick_state Stick;
     frame_input PendingInput;
     frame_input Input;
+    scene_stack Scenes;
+    title_scene Title;
     play_scene Play;
 };
 

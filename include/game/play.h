@@ -19,5 +19,6 @@ struct play_scene {
 };
 
 void EnterPlay();
+void ExitPlay();
 void UpdatePlay(f32 Dt);
 void DrawPlay();

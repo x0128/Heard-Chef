@@ -2,10 +2,60 @@
 
 #include "core/game_api.h"
 #include "core/ui.h"
+#include "game/scene_list.h"
 
 #include <raylib.h>
 
 game_state* Game = nullptr;
+
+void EnterScene(scene_id Scene) {
+    switch (Scene) {
+        case SCENE_TITLE:
+            EnterTitle();
+            break;
+        case SCENE_PLAY:
+            EnterPlay();
+            break;
+        default:
+            break;
+    }
+}
+
+void ExitScene(scene_id Scene) {
+    switch (Scene) {
+        case SCENE_PLAY:
+            ExitPlay();
+            break;
+        default:
+            break;
+    }
+}
+
+void UpdateScene(scene_id Scene, f32 Dt) {
+    switch (Scene) {
+        case SCENE_TITLE:
+            UpdateTitle(Dt);
+            break;
+        case SCENE_PLAY:
+            UpdatePlay(Dt);
+            break;
+        default:
+            break;
+    }
+}
+
+void DrawScene(scene_id Scene) {
+    switch (Scene) {
+        case SCENE_TITLE:
+            DrawTitle();
+            break;
+        case SCENE_PLAY:
+            DrawPlay();
+            break;
+        default:
+            break;
+    }
+}
 
 GAME_EXPORT void game_init_window() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
@@ -17,7 +67,7 @@ GAME_EXPORT void game_init_window() {
 
 GAME_EXPORT void game_init() {
     Game = new game_state{};
-    EnterPlay();
+    StartScenes(Game->Scenes, SCENE_TITLE);
 }
 
 GAME_EXPORT void game_update() {
@@ -26,13 +76,14 @@ GAME_EXPORT void game_update() {
     u32 Steps = AdvanceClock(Game->Clock, GetFrameTime());
     for (u32 Step = 0; Step < Steps; ++Step) {
         Game->Input = TakeInput(Game->PendingInput);
-        UpdatePlay(FIXED_STEP);
+        UpdateScenes(Game->Scenes, FIXED_STEP);
     }
     BeginDrawing();
     ClearBackground(BLACK);
     BeginMode2D(UiCamera);
-    DrawPlay();
+    DrawScenes(Game->Scenes);
     EndMode2D();
+    DrawFadeOverlay(Game->Scenes);
     EndDrawing();
 }
 

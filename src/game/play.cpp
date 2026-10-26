@@ -40,6 +40,8 @@ void EnterPlay() {
     Game->Play.PreviousPosition = PLAY_START;
 }
 
+void ExitPlay() {}
+
 void UpdatePlay(f32 Dt) {
     play_scene& Play = Game->Play;
     f32 Half = SQUARE_SIZE * 0.5f;
