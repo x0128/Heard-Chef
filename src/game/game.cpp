@@ -21,10 +21,16 @@ GAME_EXPORT void game_init() {
 }
 
 GAME_EXPORT void game_update() {
-    UpdatePlay(GetFrameTime());
+    Camera2D UiCamera = GetUiCamera();
+    MergeInput(Game->PendingInput, ReadFrameInput(Game->Stick, UiCamera));
+    u32 Steps = AdvanceClock(Game->Clock, GetFrameTime());
+    for (u32 Step = 0; Step < Steps; ++Step) {
+        Game->Input = TakeInput(Game->PendingInput);
+        UpdatePlay(FIXED_STEP);
+    }
     BeginDrawing();
     ClearBackground(BLACK);
-    BeginMode2D(GetUiCamera());
+    BeginMode2D(UiCamera);
     DrawPlay();
     EndMode2D();
     EndDrawing();

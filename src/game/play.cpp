@@ -43,6 +43,7 @@ void EnterPlay() {
 void UpdatePlay(f32 Dt) {
     play_scene& Play = Game->Play;
     f32 Half = SQUARE_SIZE * 0.5f;
+    Play.PreviousPosition = Play.Position;
     Play.Position += ReadMoveDirection() * (PLAY_SPEED * Dt);
     Play.Position.x = Clamp(Play.Position.x, Half, UI_WIDTH - Half);
     Play.Position.y = Clamp(Play.Position.y, Half, UI_HEIGHT - Half);
@@ -51,6 +52,7 @@ void UpdatePlay(f32 Dt) {
 void DrawPlay() {
     const play_scene& Play = Game->Play;
     f32 Half = SQUARE_SIZE * 0.5f;
+    Vector2 Drawn = Vector2Lerp(Play.PreviousPosition, Play.Position, GetClockBlend(Game->Clock));
     DrawRectangleV({0.f, 0.f}, {UI_WIDTH, UI_HEIGHT}, PLAY_BACKGROUND);
-    DrawRectangleV({Play.Position.x - Half, Play.Position.y - Half}, {SQUARE_SIZE, SQUARE_SIZE}, SQUARE_COLOR);
+    DrawRectangleV({Drawn.x - Half, Drawn.y - Half}, {SQUARE_SIZE, SQUARE_SIZE}, SQUARE_COLOR);
 }
