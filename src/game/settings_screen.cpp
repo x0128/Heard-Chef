@@ -31,6 +31,7 @@ void UpdateSettingsScreen() {
     switch (UpdateMenu(Game->SettingsScreen.Menu, Items, Count, Game->Input, SETTINGS_BACK)) {
         case SETTINGS_CHANGED:
             ApplySettings(Game->Settings);
+            SaveSettings(SETTINGS_FILE, Game->Settings);
             break;
         case SETTINGS_BACK:
             SaveSettings(SETTINGS_FILE, Game->Settings);

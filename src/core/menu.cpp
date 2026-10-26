@@ -54,6 +54,9 @@ static u8 ClickItem(const menu_item& Item, Rectangle Rect, Vector2 Mouse) {
     switch (Item.Kind) {
         case ITEM_SLIDER: {
             Rectangle Track = GetSliderTrack(Rect);
+            if (Mouse.x < Track.x || Mouse.x > Track.x + Track.width) {
+                return NO_ACTION;
+            }
             *Item.Slider = SnapToStep((Mouse.x - Track.x) / Track.width);
             return Item.Action;
         }
