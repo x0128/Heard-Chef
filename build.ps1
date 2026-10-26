@@ -19,10 +19,21 @@ function Invoke-Checked([scriptblock]$Command) {
     }
 }
 
-Enter-VsShell
-
 $Bin = "build/$Preset/bin"
 $HotReload = $Preset -eq "hot-reload"
+$Web = $Preset -eq "web"
+
+if ($Web) {
+    if (-not $env:EMSDK) {
+        $env:EMSDK = "C:\emsdk"
+    }
+    $env:EMSDK_QUIET = "1"
+    $ErrorActionPreference = "Continue"
+    . "$env:EMSDK\emsdk_env.ps1" *> $null
+    $ErrorActionPreference = "Stop"
+} else {
+    Enter-VsShell
+}
 
 if ($HotReload -and (Get-Process game_hot_reload -ErrorAction SilentlyContinue)) {
     $Lock = "$Bin/game.lock"
@@ -41,7 +52,11 @@ if (-not (Test-Path "build/$Preset/build.ninja")) {
 }
 Invoke-Checked { cmake --build --preset $Preset }
 
-if ($Run) {
+if ($Run -and $Web) {
+    Start-Process -FilePath python -ArgumentList "-m", "http.server", "8000" -WorkingDirectory $Bin
+    Start-Sleep -Seconds 1
+    Start-Process "http://localhost:8000"
+} elseif ($Run) {
     $Exe = if ($HotReload) { "game_hot_reload.exe" } else { "game.exe" }
     Start-Process -FilePath "$Bin/$Exe" -WorkingDirectory $Bin
 }

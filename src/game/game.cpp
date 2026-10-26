@@ -96,7 +96,9 @@ void DrawScene(scene_id Scene) {
 GAME_EXPORT void game_init_window() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
     InitWindow((int)UI_WIDTH, (int)UI_HEIGHT, GAME_TITLE);
+#if !defined(__EMSCRIPTEN__)
     SetWindowMinSize(640, 360);
+#endif
     SetExitKey(KEY_NULL);
     InitAudioDevice();
 }

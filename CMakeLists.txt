@@ -16,6 +16,9 @@ endif()
 
 include(FetchContent)
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+if(EMSCRIPTEN)
+    set(PLATFORM Web CACHE STRING "" FORCE)
+endif()
 set(BUILD_SHARED_LIBS ${GAME_HOT_RELOAD} CACHE BOOL "" FORCE)
 FetchContent_Declare(
     raylib
@@ -42,7 +45,19 @@ function(game_target_options Target)
     add_dependencies(${Target} copy_assets)
 endfunction()
 
-if(GAME_HOT_RELOAD)
+if(EMSCRIPTEN)
+    add_executable(index src/core/main_web.cpp ${CORE_SOURCES} ${GAME_SOURCES})
+    game_target_options(index)
+    set_target_properties(index PROPERTIES SUFFIX .html)
+    target_link_options(
+        index PRIVATE
+        -sUSE_GLFW=3
+        -sALLOW_MEMORY_GROWTH=1
+        --preload-file ${CMAKE_SOURCE_DIR}/assets@assets
+        --shell-file ${CMAKE_SOURCE_DIR}/web/index.html
+    )
+    set_property(TARGET index APPEND PROPERTY LINK_DEPENDS ${CMAKE_SOURCE_DIR}/web/index.html)
+elseif(GAME_HOT_RELOAD)
     add_library(game SHARED ${CORE_SOURCES} ${GAME_SOURCES})
     target_compile_definitions(game PRIVATE GAME_DLL USE_LIBTYPE_SHARED)
     game_target_options(game)

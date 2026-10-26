@@ -41,6 +41,16 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
+    },
+    {
+      "name": "web",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "toolchainFile": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/build/${presetName}/bin"
+      }
     }
   ],
   "buildPresets": [
@@ -55,6 +65,10 @@
     {
       "name": "release",
       "configurePreset": "release"
+    },
+    {
+      "name": "web",
+      "configurePreset": "web"
     }
   ]
 }
