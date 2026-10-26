@@ -57,12 +57,21 @@ void SavePlay() {
     WritePlaySave({Game->Play.Position});
 }
 
+static Vector2 ClampToArena(Vector2 Position) {
+    if (!std::isfinite(Position.x) || !std::isfinite(Position.y)) {
+        return PLAY_START;
+    }
+    f32 Half = SQUARE_SIZE * 0.5f;
+    return {Clamp(Position.x, Half, UI_WIDTH - Half), Clamp(Position.y, Half, UI_HEIGHT - Half)};
+}
+
 void EnterPlay() {
     play_save Save = {PLAY_START};
     ReadPlaySave(Save);
+    Vector2 Start = ClampToArena(Save.Position);
     Game->Play = {};
-    Game->Play.Position = Save.Position;
-    Game->Play.PreviousPosition = Save.Position;
+    Game->Play.Position = Start;
+    Game->Play.PreviousPosition = Start;
 }
 
 void ExitPlay() {
@@ -71,7 +80,6 @@ void ExitPlay() {
 
 void UpdatePlay(f32 Dt) {
     play_scene& Play = Game->Play;
-    f32 Half = SQUARE_SIZE * 0.5f;
     Play.PreviousPosition = Play.Position;
     if (WasPressed(Game->Input, ACTION_PAUSE)) {
         PushScene(Game->Scenes, SCENE_PAUSE);
@@ -82,9 +90,7 @@ void UpdatePlay(f32 Dt) {
         Play.SaveTimer = 0.f;
         SavePlay();
     }
-    Play.Position += ReadMoveDirection() * (PLAY_SPEED * Dt);
-    Play.Position.x = Clamp(Play.Position.x, Half, UI_WIDTH - Half);
-    Play.Position.y = Clamp(Play.Position.y, Half, UI_HEIGHT - Half);
+    Play.Position = ClampToArena(Play.Position + ReadMoveDirection() * (PLAY_SPEED * Dt));
 }
 
 void DrawPlay() {

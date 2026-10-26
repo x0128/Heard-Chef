@@ -43,7 +43,7 @@ frame_input ReadFrameInput(stick_state& Stick, const Camera2D& UiCamera) {
         Input.Pressed[ACTION_LEFT] |= IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT);
         Input.Pressed[ACTION_RIGHT] |= IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT);
         Input.Pressed[ACTION_CONFIRM] |= IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
-        Input.Pressed[ACTION_BACK] |= IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT);
+        Input.Pressed[ACTION_BACK] |= IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT);
         Input.Pressed[ACTION_PAUSE] |= IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT);
 
         s8 X = GetStickDirection(GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X));
