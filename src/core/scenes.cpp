@@ -50,6 +50,12 @@ void PopScene(scene_stack& Stack) {
     ExitScene(Stack.Ids[Stack.Count]);
 }
 
+void StopScenes(scene_stack& Stack) {
+    ExitAllScenes(Stack);
+    Stack.Fade = FADE_NONE;
+    Stack.FadeTimer = 0.f;
+}
+
 void UpdateScenes(scene_stack& Stack, f32 Dt) {
     switch (Stack.Fade) {
         case FADE_OUT:

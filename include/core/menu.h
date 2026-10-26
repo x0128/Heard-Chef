@@ -8,6 +8,8 @@
 constexpr u8 NO_ACTION = 0xff;
 constexpr u32 MAX_MENU_ITEMS = 8;
 constexpr f32 SLIDER_STEP = 0.1f;
+constexpr f32 OVERLAY_DIM = 0.55f;
+constexpr f32 SOLID_OVERLAY_DIM = 0.92f;
 
 constexpr f32 MENU_WIDTH = 440.f;
 constexpr f32 MENU_TOP = 140.f;

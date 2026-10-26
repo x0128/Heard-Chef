@@ -25,6 +25,7 @@ void StartScenes(scene_stack& Stack, scene_id First);
 void ChangeScene(scene_stack& Stack, scene_id Next);
 void PushScene(scene_stack& Stack, scene_id Scene);
 void PopScene(scene_stack& Stack);
+void StopScenes(scene_stack& Stack);
 
 void UpdateScenes(scene_stack& Stack, f32 Dt);
 void DrawScenes(const scene_stack& Stack);

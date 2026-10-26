@@ -1,5 +1,6 @@
 #include "game/play.h"
 
+#include "core/save.h"
 #include "game/game.h"
 #include "game/scene_list.h"
 
@@ -35,13 +36,38 @@ static Vector2 ReadMoveDirection() {
     return Direction;
 }
 
-void EnterPlay() {
-    Game->Play = {};
-    Game->Play.Position = PLAY_START;
-    Game->Play.PreviousPosition = PLAY_START;
+static bool ReadPlaySave(play_save& Save) {
+    return ReadVersionedFile(SAVE_FILE, PLAY_SAVE_MAGIC, PLAY_SAVE_VERSION, &Save, sizeof(play_save));
 }
 
-void ExitPlay() {}
+static void WritePlaySave(const play_save& Save) {
+    WriteVersionedFile(SAVE_FILE, PLAY_SAVE_MAGIC, PLAY_SAVE_VERSION, &Save, sizeof(play_save));
+}
+
+bool HasPlaySave() {
+    play_save Scratch = {};
+    return ReadPlaySave(Scratch);
+}
+
+void WriteNewPlaySave() {
+    WritePlaySave({PLAY_START});
+}
+
+void SavePlay() {
+    WritePlaySave({Game->Play.Position});
+}
+
+void EnterPlay() {
+    play_save Save = {PLAY_START};
+    ReadPlaySave(Save);
+    Game->Play = {};
+    Game->Play.Position = Save.Position;
+    Game->Play.PreviousPosition = Save.Position;
+}
+
+void ExitPlay() {
+    SavePlay();
+}
 
 void UpdatePlay(f32 Dt) {
     play_scene& Play = Game->Play;
@@ -50,6 +76,11 @@ void UpdatePlay(f32 Dt) {
     if (WasPressed(Game->Input, ACTION_PAUSE)) {
         PushScene(Game->Scenes, SCENE_PAUSE);
         return;
+    }
+    Play.SaveTimer += Dt;
+    if (Play.SaveTimer >= PLAY_SAVE_SECONDS) {
+        Play.SaveTimer = 0.f;
+        SavePlay();
     }
     Play.Position += ReadMoveDirection() * (PLAY_SPEED * Dt);
     Play.Position.x = Clamp(Play.Position.x, Half, UI_WIDTH - Half);

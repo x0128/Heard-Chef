@@ -19,6 +19,12 @@ void EnterScene(scene_id Scene) {
         case SCENE_PAUSE:
             EnterPause();
             break;
+        case SCENE_CONFIRM:
+            EnterConfirm();
+            break;
+        case SCENE_SETTINGS:
+            EnterSettingsScreen();
+            break;
         case SCENE_PLAY:
             EnterPlay();
             break;
@@ -48,6 +54,12 @@ void UpdateScene(scene_id Scene, f32 Dt) {
         case SCENE_PAUSE:
             UpdatePause();
             break;
+        case SCENE_CONFIRM:
+            UpdateConfirm();
+            break;
+        case SCENE_SETTINGS:
+            UpdateSettingsScreen();
+            break;
         case SCENE_PLAY:
             UpdatePlay(Dt);
             break;
@@ -67,6 +79,12 @@ void DrawScene(scene_id Scene) {
         case SCENE_PAUSE:
             DrawPause();
             break;
+        case SCENE_CONFIRM:
+            DrawConfirm();
+            break;
+        case SCENE_SETTINGS:
+            DrawSettingsScreen();
+            break;
         case SCENE_PLAY:
             DrawPlay();
             break;
@@ -85,6 +103,8 @@ GAME_EXPORT void game_init_window() {
 
 GAME_EXPORT void game_init() {
     Game = new game_state{};
+    Game->Settings = LoadSettings(SETTINGS_FILE);
+    ApplySettings(Game->Settings);
     StartScenes(Game->Scenes, SCENE_TITLE);
 }
 
@@ -115,6 +135,7 @@ GAME_EXPORT bool game_should_run() {
 }
 
 GAME_EXPORT void game_shutdown() {
+    StopScenes(Game->Scenes);
     delete Game;
     Game = nullptr;
 }
