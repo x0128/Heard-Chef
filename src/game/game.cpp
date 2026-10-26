@@ -13,6 +13,12 @@ void EnterScene(scene_id Scene) {
         case SCENE_TITLE:
             EnterTitle();
             break;
+        case SCENE_MAIN_MENU:
+            EnterMainMenu();
+            break;
+        case SCENE_PAUSE:
+            EnterPause();
+            break;
         case SCENE_PLAY:
             EnterPlay();
             break;
@@ -36,6 +42,12 @@ void UpdateScene(scene_id Scene, f32 Dt) {
         case SCENE_TITLE:
             UpdateTitle(Dt);
             break;
+        case SCENE_MAIN_MENU:
+            UpdateMainMenu();
+            break;
+        case SCENE_PAUSE:
+            UpdatePause();
+            break;
         case SCENE_PLAY:
             UpdatePlay(Dt);
             break;
@@ -48,6 +60,12 @@ void DrawScene(scene_id Scene) {
     switch (Scene) {
         case SCENE_TITLE:
             DrawTitle();
+            break;
+        case SCENE_MAIN_MENU:
+            DrawMainMenu();
+            break;
+        case SCENE_PAUSE:
+            DrawPause();
             break;
         case SCENE_PLAY:
             DrawPlay();

@@ -4,6 +4,8 @@
 #include "core/loop.h"
 #include "core/scenes.h"
 #include "core/types.h"
+#include "game/main_menu.h"
+#include "game/pause.h"
 #include "game/play.h"
 #include "game/title.h"
 
@@ -19,7 +21,9 @@ struct game_state {
     frame_input Input;
     scene_stack Scenes;
     title_scene Title;
+    main_menu_scene MainMenu;
     play_scene Play;
+    pause_scene Pause;
 };
 
 extern game_state* Game;

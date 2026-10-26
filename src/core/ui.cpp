@@ -13,3 +13,8 @@ Camera2D GetUiCameraFor(f32 ScreenWidth, f32 ScreenHeight) {
 Camera2D GetUiCamera() {
     return GetUiCameraFor((f32)GetScreenWidth(), (f32)GetScreenHeight());
 }
+
+void DrawCenteredText(const char* Text, f32 Y, int FontSize, Color Tint) {
+    int Width = MeasureText(Text, FontSize);
+    DrawText(Text, (int)(UI_WIDTH * 0.5f) - Width / 2, (int)Y, FontSize, Tint);
+}

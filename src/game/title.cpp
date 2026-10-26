@@ -6,11 +6,6 @@
 
 #include <cmath>
 
-static void DrawCenteredText(const char* Text, f32 Y, int FontSize, Color Tint) {
-    int Width = MeasureText(Text, FontSize);
-    DrawText(Text, (int)(UI_WIDTH * 0.5f) - Width / 2, (int)Y, FontSize, Tint);
-}
-
 void EnterTitle() {
     Game->Title = {};
 }
@@ -18,7 +13,7 @@ void EnterTitle() {
 void UpdateTitle(f32 Dt) {
     Game->Title.Time += Dt;
     if (Game->Input.AnyPressed) {
-        ChangeScene(Game->Scenes, SCENE_PLAY);
+        ChangeScene(Game->Scenes, SCENE_MAIN_MENU);
     }
 }
 

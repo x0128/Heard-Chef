@@ -1,6 +1,7 @@
 #include "game/play.h"
 
 #include "game/game.h"
+#include "game/scene_list.h"
 
 #include <cmath>
 #include <raymath.h>
@@ -46,6 +47,10 @@ void UpdatePlay(f32 Dt) {
     play_scene& Play = Game->Play;
     f32 Half = SQUARE_SIZE * 0.5f;
     Play.PreviousPosition = Play.Position;
+    if (WasPressed(Game->Input, ACTION_PAUSE)) {
+        PushScene(Game->Scenes, SCENE_PAUSE);
+        return;
+    }
     Play.Position += ReadMoveDirection() * (PLAY_SPEED * Dt);
     Play.Position.x = Clamp(Play.Position.x, Half, UI_WIDTH - Half);
     Play.Position.y = Clamp(Play.Position.y, Half, UI_HEIGHT - Half);
