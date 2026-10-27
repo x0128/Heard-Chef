@@ -13,15 +13,15 @@ enum pause_action : u8 {
 static u32 GetPauseItems(menu_item *Out)
 {
   u32 Count = 0;
-  Out[Count++] = { "Resume", PAUSE_RESUME, ITEM_PRIMARY };
-  Out[Count++] = { "Settings", PAUSE_SETTINGS, ITEM_BUTTON };
-  Out[Count++] = { "Quit to menu", PAUSE_QUIT, ITEM_FOOTER };
+  Out[Count++] = { .Label = "Resume", .Action = PAUSE_RESUME, .Kind = ITEM_PRIMARY };
+  Out[Count++] = { .Label = "Settings", .Action = PAUSE_SETTINGS, .Kind = ITEM_BUTTON };
+  Out[Count++] = { .Label = "Quit to menu", .Action = PAUSE_QUIT, .Kind = ITEM_FOOTER };
   return Count;
 }
 
 void EnterPause() { Game->Pause = {}; }
 
-void UpdatePause()
+void UpdatePause(f32 /*Deltatime*/)
 {
   menu_item Items[MAX_MENU_ITEMS];
   u32 Count = GetPauseItems(Items);
@@ -44,6 +44,6 @@ void DrawPause()
 {
   menu_item Items[MAX_MENU_ITEMS];
   u32 Count = GetPauseItems(Items);
-  DrawRectangleV({ 0.f, 0.f }, { UI_WIDTH, UI_HEIGHT }, Fade(BLACK, OVERLAY_DIM));
+  DrawRectangleV({ .x = 0.F, .y = 0.F }, { .x = UI_WIDTH, .y = UI_HEIGHT }, Fade(BLACK, OVERLAY_DIM));
   DrawMenu(Game->Pause.Menu, "Paused", Items, Count, DEFAULT_MENU_THEME);
 }

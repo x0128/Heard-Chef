@@ -7,5 +7,5 @@ struct pause_scene {
 };
 
 void EnterPause();
-void UpdatePause();
+void UpdatePause(f32 Deltatime);
 void DrawPause();

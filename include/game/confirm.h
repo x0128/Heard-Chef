@@ -9,5 +9,5 @@ struct confirm_scene
 { menu_state Menu; };
 
 void EnterConfirm();
-void UpdateConfirm();
+void UpdateConfirm(f32 Deltatime);
 void DrawConfirm();

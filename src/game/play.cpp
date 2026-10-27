@@ -10,21 +10,21 @@
 static f32 ReadStickAxis(GamepadAxis Axis)
 {
   f32 Value = GetGamepadAxisMovement(0, Axis);
-  return fabsf(Value) < STICK_DEADZONE ? 0.f : Value;
+  return fabsf(Value) < STICK_DEADZONE ? 0.F : Value;
 }
 
 static Vector2 ReadMoveDirection()
 {
   Vector2 Direction = {};
-  if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) { Direction.x -= 1.f; }
-  if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) { Direction.x += 1.f; }
-  if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) { Direction.y -= 1.f; }
-  if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) { Direction.y += 1.f; }
+  if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) { Direction.x -= 1.F; }
+  if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) { Direction.x += 1.F; }
+  if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) { Direction.y -= 1.F; }
+  if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) { Direction.y += 1.F; }
   if (IsGamepadAvailable(0)) {
     Direction.x += ReadStickAxis(GAMEPAD_AXIS_LEFT_X);
     Direction.y += ReadStickAxis(GAMEPAD_AXIS_LEFT_Y);
   }
-  if (Vector2Length(Direction) > 1.f) { Direction = Vector2Normalize(Direction); }
+  if (Vector2Length(Direction) > 1.F) { Direction = Vector2Normalize(Direction); }
   return Direction;
 }
 
@@ -45,8 +45,8 @@ void SavePlay() { WritePlaySave({ Game->Play.Position }); }
 static Vector2 ClampToArena(Vector2 Position)
 {
   if (!std::isfinite(Position.x) || !std::isfinite(Position.y)) { return PLAY_START; }
-  f32 Half = SQUARE_SIZE * 0.5f;
-  return { Clamp(Position.x, Half, UI_WIDTH - Half), Clamp(Position.y, Half, UI_HEIGHT - Half) };
+  f32 Half = SQUARE_SIZE * 0.5F;
+  return { .x = Clamp(Position.x, Half, UI_WIDTH - Half), .y = Clamp(Position.y, Half, UI_HEIGHT - Half) };
 }
 
 void EnterPlay()
@@ -61,7 +61,7 @@ void EnterPlay()
 
 void ExitPlay() { SavePlay(); }
 
-void UpdatePlay(f32 Dt)
+void UpdatePlay(f32 Deltatime)
 {
   play_scene &Play = Game->Play;
   Play.PreviousPosition = Play.Position;
@@ -69,19 +69,19 @@ void UpdatePlay(f32 Dt)
     PushScene(Game->Scenes, SCENE_PAUSE);
     return;
   }
-  Play.SaveTimer += Dt;
+  Play.SaveTimer += Deltatime;
   if (Play.SaveTimer >= PLAY_SAVE_SECONDS) {
-    Play.SaveTimer = 0.f;
+    Play.SaveTimer = 0.F;
     SavePlay();
   }
-  Play.Position = ClampToArena(Play.Position + ReadMoveDirection() * (PLAY_SPEED * Dt));
+  Play.Position = ClampToArena(Play.Position + ReadMoveDirection() * (PLAY_SPEED * Deltatime));
 }
 
 void DrawPlay()
 {
   const play_scene &Play = Game->Play;
-  f32 Half = SQUARE_SIZE * 0.5f;
+  f32 Half = SQUARE_SIZE * 0.5F;
   Vector2 Drawn = Vector2Lerp(Play.PreviousPosition, Play.Position, GetClockBlend(Game->Clock));
-  DrawRectangleV({ 0.f, 0.f }, { UI_WIDTH, UI_HEIGHT }, PLAY_BACKGROUND);
-  DrawRectangleV({ Drawn.x - Half, Drawn.y - Half }, { SQUARE_SIZE, SQUARE_SIZE }, SQUARE_COLOR);
+  DrawRectangleV({ .x = 0.F, .y = 0.F }, { .x = UI_WIDTH, .y = UI_HEIGHT }, PLAY_BACKGROUND);
+  DrawRectangleV({ .x = Drawn.x - Half, .y = Drawn.y - Half }, { .x = SQUARE_SIZE, .y = SQUARE_SIZE }, SQUARE_COLOR);
 }

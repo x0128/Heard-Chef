@@ -12,8 +12,8 @@ enum confirm_action : u8 {
 static u32 GetConfirmItems(menu_item *Out)
 {
   u32 Count = 0;
-  Out[Count++] = { "Yes, start over", CONFIRM_YES, ITEM_PRIMARY };
-  Out[Count++] = { "No", CONFIRM_NO, ITEM_FOOTER };
+  Out[Count++] = { .Label = "Yes, start over", .Action = CONFIRM_YES, .Kind = ITEM_PRIMARY };
+  Out[Count++] = { .Label = "No", .Action = CONFIRM_NO, .Kind = ITEM_FOOTER };
   return Count;
 }
 
@@ -23,7 +23,7 @@ void EnterConfirm()
   Game->Confirm.Menu.Focus = 1;
 }
 
-void UpdateConfirm()
+void UpdateConfirm(f32 /*Deltatime*/)
 {
   menu_item Items[MAX_MENU_ITEMS];
   u32 Count = GetConfirmItems(Items);
@@ -44,7 +44,7 @@ void DrawConfirm()
 {
   menu_item Items[MAX_MENU_ITEMS];
   u32 Count = GetConfirmItems(Items);
-  DrawRectangleV({ 0.f, 0.f }, { UI_WIDTH, UI_HEIGHT }, Fade(BLACK, SOLID_OVERLAY_DIM));
+  DrawRectangleV({ .x = 0.F, .y = 0.F }, { .x = UI_WIDTH, .y = UI_HEIGHT }, Fade(BLACK, SOLID_OVERLAY_DIM));
   DrawCenteredText("Your save will be replaced.", CONFIRM_TEXT_Y, MENU_FONT_SIZE, CONFIRM_TEXT);
   DrawMenu(Game->Confirm.Menu, "Start a new game?", Items, Count, DEFAULT_MENU_THEME);
 }

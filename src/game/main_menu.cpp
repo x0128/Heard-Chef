@@ -15,11 +15,11 @@ static u32 GetMainMenuItems(menu_item *Out)
 {
   bool HasSave = Game->MainMenu.HasSave;
   u32 Count = 0;
-  if (HasSave) { Out[Count++] = { "Continue", MAIN_CONTINUE, ITEM_PRIMARY }; }
-  Out[Count++] = { "New game", MAIN_NEW_GAME, HasSave ? ITEM_BUTTON : ITEM_PRIMARY };
-  Out[Count++] = { "Settings", MAIN_SETTINGS, ITEM_BUTTON };
+  if (HasSave) { Out[Count++] = { .Label = "Continue", .Action = MAIN_CONTINUE, .Kind = ITEM_PRIMARY }; }
+  Out[Count++] = { .Label = "New game", .Action = MAIN_NEW_GAME, .Kind = HasSave ? ITEM_BUTTON : ITEM_PRIMARY };
+  Out[Count++] = { .Label = "Settings", .Action = MAIN_SETTINGS, .Kind = ITEM_BUTTON };
 #if !defined(__EMSCRIPTEN__)
-  Out[Count++] = { "Exit", MAIN_EXIT, ITEM_FOOTER };
+  Out[Count++] = { .Label = "Exit", .Action = MAIN_EXIT, .Kind = ITEM_FOOTER };
 #endif
   return Count;
 }
@@ -30,7 +30,7 @@ void EnterMainMenu()
   Game->MainMenu.HasSave = HasPlaySave();
 }
 
-void UpdateMainMenu()
+void UpdateMainMenu(f32 /*Deltatime*/)
 {
   menu_item Items[MAX_MENU_ITEMS];
   u32 Count = GetMainMenuItems(Items);
@@ -61,7 +61,7 @@ void DrawMainMenu()
 {
   menu_item Items[MAX_MENU_ITEMS];
   u32 Count = GetMainMenuItems(Items);
-  DrawRectangleV({ 0.f, 0.f }, { UI_WIDTH, UI_HEIGHT }, MAIN_MENU_BACKGROUND);
+  DrawRectangleV({ .x = 0.F, .y = 0.F }, { .x = UI_WIDTH, .y = UI_HEIGHT }, MAIN_MENU_BACKGROUND);
   DrawCenteredText(GAME_TITLE, LOGO_Y, LOGO_FONT_SIZE, LOGO_TEXT);
   DrawMenu(Game->MainMenu.Menu, "Main menu", Items, Count, DEFAULT_MENU_THEME);
 }

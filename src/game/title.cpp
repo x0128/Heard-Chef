@@ -25,6 +25,6 @@ void DrawTitle()
   DrawRectangleV({ .x = 0.F, .y = 0.F }, { .x = UI_WIDTH, .y = UI_HEIGHT }, TITLE_BACKGROUND);
   DrawCenteredText(GAME_TITLE, UI_HEIGHT * 0.38F, TITLE_FONT_SIZE, TITLE_TEXT);
   if (fmodf(Game->Title.Time, PROMPT_BLINK_SECONDS) < PROMPT_VISIBLE_SECONDS) {
-    DrawCenteredText("press any key", UI_HEIGHT * 0.62f, PROMPT_FONT_SIZE, PROMPT_TEXT);
+    DrawCenteredText("press any key", UI_HEIGHT * 0.62F, PROMPT_FONT_SIZE, PROMPT_TEXT);
   }
 }

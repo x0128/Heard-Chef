@@ -66,7 +66,7 @@ bool WriteVersionedFile(const char *Name, u32 Magic, u32 Version, const void *Da
 {
   u32 Total = (u32)sizeof(file_header) + Size;
   u8 *Buffer = (u8 *)MemAlloc(Total);
-  file_header Header = { Magic, Version, Size };
+  file_header Header = { .Magic = Magic, .Version = Version, .Size = Size };
   memcpy(Buffer, &Header, sizeof(file_header));
   memcpy(Buffer + sizeof(file_header), Data, Size);
   bool Saved = WriteBytes(Name, Buffer, Total);

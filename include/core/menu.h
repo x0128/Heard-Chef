@@ -7,19 +7,19 @@
 
 constexpr u8 NO_ACTION = 0xff;
 constexpr u32 MAX_MENU_ITEMS = 8;
-constexpr f32 SLIDER_STEP = 0.1f;
-constexpr f32 OVERLAY_DIM = 0.55f;
-constexpr f32 SOLID_OVERLAY_DIM = 0.92f;
+constexpr f32 SLIDER_STEP = 0.1F;
+constexpr f32 OVERLAY_DIM = 0.55F;
+constexpr f32 SOLID_OVERLAY_DIM = 0.92F;
 
-constexpr f32 MENU_WIDTH = 440.f;
-constexpr f32 MENU_TOP = 140.f;
-constexpr f32 MENU_PADDING = 16.f;
-constexpr f32 MENU_TITLE_HEIGHT = 40.f;
-constexpr f32 MENU_ITEM_HEIGHT = 56.f;
-constexpr f32 MENU_ITEM_GAP = 8.f;
-constexpr f32 MENU_FOOTER_GAP = 20.f;
-constexpr f32 MENU_FOOTER_WIDTH = 180.f;
-constexpr f32 MENU_FOOTER_HEIGHT = 48.f;
+constexpr f32 MENU_WIDTH = 440.F;
+constexpr f32 MENU_TOP = 140.F;
+constexpr f32 MENU_PADDING = 16.F;
+constexpr f32 MENU_TITLE_HEIGHT = 40.F;
+constexpr f32 MENU_ITEM_HEIGHT = 56.F;
+constexpr f32 MENU_ITEM_GAP = 8.F;
+constexpr f32 MENU_FOOTER_GAP = 20.F;
+constexpr f32 MENU_FOOTER_WIDTH = 180.F;
+constexpr f32 MENU_FOOTER_HEIGHT = 48.F;
 constexpr int MENU_TITLE_FONT_SIZE = 28;
 constexpr int MENU_FONT_SIZE = 24;
 

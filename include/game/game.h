@@ -4,7 +4,6 @@
 #include "core/loop.h"
 #include "core/scenes.h"
 #include "core/settings.h"
-#include "core/types.h"
 #include "game/confirm.h"
 #include "game/main_menu.h"
 #include "game/pause.h"
@@ -24,6 +23,7 @@ struct game_state
   frame_input PendingInput;
   frame_input Input;
   settings Settings;
+
   scene_stack Scenes;
   title_scene Title;
   main_menu_scene MainMenu;

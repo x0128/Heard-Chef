@@ -12,19 +12,19 @@ static u32 GetSettingsItems(menu_item *Out)
 {
   settings &Settings = Game->Settings;
   u32 Count = 0;
-  Out[Count++] = { "Master volume", SETTINGS_CHANGED, ITEM_SLIDER, &Settings.MasterVolume };
-  Out[Count++] = { "Music", SETTINGS_CHANGED, ITEM_SLIDER, &Settings.MusicVolume };
-  Out[Count++] = { "Sound effects", SETTINGS_CHANGED, ITEM_SLIDER, &Settings.SfxVolume };
+  Out[Count++] = { .Label = "Master volume", .Action = SETTINGS_CHANGED, .Kind = ITEM_SLIDER, .Slider = &Settings.MasterVolume };
+  Out[Count++] = { .Label = "Music", .Action = SETTINGS_CHANGED, .Kind = ITEM_SLIDER, .Slider = &Settings.MusicVolume };
+  Out[Count++] = { .Label = "Sound effects", .Action = SETTINGS_CHANGED, .Kind = ITEM_SLIDER, .Slider = &Settings.SfxVolume };
 #if !defined(__EMSCRIPTEN__)
-  Out[Count++] = { "Fullscreen", SETTINGS_CHANGED, ITEM_TOGGLE, nullptr, &Settings.Fullscreen };
+  Out[Count++] = { .Label = "Fullscreen", .Action = SETTINGS_CHANGED, .Kind = ITEM_TOGGLE, .Slider = nullptr, .Toggle = &Settings.Fullscreen };
 #endif
-  Out[Count++] = { "Back", SETTINGS_BACK, ITEM_FOOTER };
+  Out[Count++] = { .Label = "Back", .Action = SETTINGS_BACK, .Kind = ITEM_FOOTER };
   return Count;
 }
 
 void EnterSettingsScreen() { Game->SettingsScreen = {}; }
 
-void UpdateSettingsScreen()
+void UpdateSettingsScreen(f32 /*Deltatime*/)
 {
   menu_item Items[MAX_MENU_ITEMS];
   u32 Count = GetSettingsItems(Items);
@@ -46,6 +46,6 @@ void DrawSettingsScreen()
 {
   menu_item Items[MAX_MENU_ITEMS];
   u32 Count = GetSettingsItems(Items);
-  DrawRectangleV({ 0.f, 0.f }, { UI_WIDTH, UI_HEIGHT }, Fade(BLACK, SOLID_OVERLAY_DIM));
+  DrawRectangleV({ .x = 0.F, .y = 0.F }, { .x = UI_WIDTH, .y = UI_HEIGHT }, Fade(BLACK, SOLID_OVERLAY_DIM));
   DrawMenu(Game->SettingsScreen.Menu, "Settings", Items, Count, DEFAULT_MENU_THEME);
 }

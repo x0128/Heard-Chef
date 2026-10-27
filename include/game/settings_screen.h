@@ -7,5 +7,5 @@ struct settings_scene {
 };
 
 void EnterSettingsScreen();
-void UpdateSettingsScreen();
+void UpdateSettingsScreen(f32 Deltatime);
 void DrawSettingsScreen();

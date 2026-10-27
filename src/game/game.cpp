@@ -4,106 +4,59 @@
 #include "core/game_api.h"
 #include "core/ui.h"
 #include "game/scene_list.h"
-
+#include <array>
 #include <raylib.h>
 
 game_state *Game = nullptr;
 
-void EnterScene(scene_id Scene)
+constexpr int MIN_WINDOW_WIDTH = 640;
+constexpr int MIN_WINDOW_HEIGHT = 360;
+
+struct scene_funcs
 {
-  switch (Scene) {
-  case SCENE_TITLE:
-    EnterTitle();
-    break;
-  case SCENE_MAIN_MENU:
-    EnterMainMenu();
-    break;
-  case SCENE_PAUSE:
-    EnterPause();
-    break;
-  case SCENE_CONFIRM:
-    EnterConfirm();
-    break;
-  case SCENE_SETTINGS:
-    EnterSettingsScreen();
-    break;
-  case SCENE_PLAY:
-    EnterPlay();
-    break;
-  default:
-    break;
+  scene Id;
+  void (*Enter)();
+  void (*Exit)();
+  void (*Update)(f32 Deltatime);
+  void (*Draw)();
+};
+
+static constexpr std::array<scene_funcs, scene::SCENE_COUNT> SCENE_FUNCS = { {
+  { .Id = SCENE_TITLE, .Enter = EnterTitle, .Update = UpdateTitle, .Draw = DrawTitle },
+  { .Id = SCENE_MAIN_MENU, .Enter = EnterMainMenu, .Update = UpdateMainMenu, .Draw = DrawMainMenu },
+  { .Id = SCENE_CONFIRM, .Enter = EnterConfirm, .Update = UpdateConfirm, .Draw = DrawConfirm },
+  { .Id = SCENE_PLAY, .Enter = EnterPlay, .Exit = ExitPlay, .Update = UpdatePlay, .Draw = DrawPlay },
+  { .Id = SCENE_PAUSE, .Enter = EnterPause, .Update = UpdatePause, .Draw = DrawPause },
+  { .Id = SCENE_SETTINGS, .Enter = EnterSettingsScreen, .Update = UpdateSettingsScreen, .Draw = DrawSettingsScreen },
+} };
+
+static constexpr bool SceneFuncsMatchEnum()
+{
+  if (std::size(SCENE_FUNCS) != SCENE_COUNT) { return false; }
+  for (u32 Index = 0; Index < SCENE_COUNT; ++Index) {
+    if (SCENE_FUNCS.at(Index).Id != Index) { return false; }
   }
+  return true;
 }
+static_assert(SceneFuncsMatchEnum(), "SCENE_FUNCS needs one row per scene, in enum scene order");
+
+void EnterScene(scene_id Scene) { SCENE_FUNCS.at(Scene).Enter(); }
 
 void ExitScene(scene_id Scene)
 {
-  switch (Scene) {
-  case SCENE_PLAY:
-    ExitPlay();
-    break;
-  default:
-    break;
-  }
+  if (SCENE_FUNCS.at(Scene).Exit != nullptr) { SCENE_FUNCS.at(Scene).Exit(); }
 }
 
-void UpdateScene(scene_id Scene, f32 Dt)
-{
-  switch (Scene) {
-  case SCENE_TITLE:
-    UpdateTitle(Dt);
-    break;
-  case SCENE_MAIN_MENU:
-    UpdateMainMenu();
-    break;
-  case SCENE_PAUSE:
-    UpdatePause();
-    break;
-  case SCENE_CONFIRM:
-    UpdateConfirm();
-    break;
-  case SCENE_SETTINGS:
-    UpdateSettingsScreen();
-    break;
-  case SCENE_PLAY:
-    UpdatePlay(Dt);
-    break;
-  default:
-    break;
-  }
-}
+void UpdateScene(scene_id Scene, f32 Deltatime) { SCENE_FUNCS.at(Scene).Update(Deltatime); }
 
-void DrawScene(scene_id Scene)
-{
-  switch (Scene) {
-  case SCENE_TITLE:
-    DrawTitle();
-    break;
-  case SCENE_MAIN_MENU:
-    DrawMainMenu();
-    break;
-  case SCENE_PAUSE:
-    DrawPause();
-    break;
-  case SCENE_CONFIRM:
-    DrawConfirm();
-    break;
-  case SCENE_SETTINGS:
-    DrawSettingsScreen();
-    break;
-  case SCENE_PLAY:
-    DrawPlay();
-    break;
-  default:
-    break;
-  }
-}
+void DrawScene(scene_id Scene) { SCENE_FUNCS.at(Scene).Draw(); }
 
 GAME_EXPORT void GameInitWindow()
 {
   SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
   InitWindow((int)UI_WIDTH, (int)UI_HEIGHT, GAME_TITLE);
 #if !defined(__EMSCRIPTEN__)
-  SetWindowMinSize(640, 360);
+  SetWindowMinSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
 #endif
   SetExitKey(KEY_NULL);
   InitAudioDevice();
@@ -160,7 +113,7 @@ GAME_EXPORT void *GameMemory() { return Game; }
 
 GAME_EXPORT int GameMemorySize() { return (int)sizeof(game_state); }
 
-GAME_EXPORT void GameHotReloaded(void *Memory) { Game = (game_state *)Memory; }
+GAME_EXPORT void GameHotReloaded(void *Memory) { Game = static_cast<game_state *>(Memory); }
 
 GAME_EXPORT bool GameForceReload() { return IsKeyPressed(KEY_F5); }
 

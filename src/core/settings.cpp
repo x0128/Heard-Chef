@@ -9,7 +9,7 @@
 static f32 CleanVolume(f32 Value, f32 Default)
 {
   if (!std::isfinite(Value)) { return Default; }
-  return fminf(fmaxf(Value, 0.f), 1.f);
+  return fminf(fmaxf(Value, 0.F), 1.F);
 }
 
 static bool CleanBool(const bool &Value)

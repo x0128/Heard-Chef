@@ -6,7 +6,7 @@ static void ExitAllScenes(scene_stack &Stack)
 {
   while (Stack.Count > 0) {
     --Stack.Count;
-    ExitScene(Stack.Ids[Stack.Count]);
+    ExitScene(Stack.Ids.at(Stack.Count));
   }
 }
 
@@ -23,7 +23,7 @@ void ChangeScene(scene_stack &Stack, scene_id Next)
 {
   if (IsFading(Stack)) { return; }
   Stack.Fade = FADE_OUT;
-  Stack.FadeTimer = 0.f;
+  Stack.FadeTimer = 0.F;
   Stack.Next = Next;
 }
 
@@ -53,32 +53,32 @@ void StopScenes(scene_stack &Stack)
 {
   ExitAllScenes(Stack);
   Stack.Fade = FADE_NONE;
-  Stack.FadeTimer = 0.f;
+  Stack.FadeTimer = 0.F;
 }
 
-void UpdateScenes(scene_stack &Stack, f32 Dt)
+void UpdateScenes(scene_stack &Stack, f32 Deltatime)
 {
   switch (Stack.Fade) {
   case FADE_OUT:
-    Stack.FadeTimer += Dt;
+    Stack.FadeTimer += Deltatime;
     if (Stack.FadeTimer >= FADE_SECONDS) {
       ExitAllScenes(Stack);
       Stack.Ids[0] = Stack.Next;
       Stack.Count = 1;
       EnterScene(Stack.Next);
       Stack.Fade = FADE_IN;
-      Stack.FadeTimer = 0.f;
+      Stack.FadeTimer = 0.F;
     }
     break;
   case FADE_IN:
-    Stack.FadeTimer += Dt;
+    Stack.FadeTimer += Deltatime;
     if (Stack.FadeTimer >= FADE_SECONDS) {
       Stack.Fade = FADE_NONE;
-      Stack.FadeTimer = 0.f;
+      Stack.FadeTimer = 0.F;
     }
     break;
   case FADE_NONE:
-    if (Stack.Count > 0) { UpdateScene(GetTopScene(Stack), Dt); }
+    if (Stack.Count > 0) { UpdateScene(GetTopScene(Stack), Deltatime); }
     break;
   }
 }
@@ -91,7 +91,7 @@ void DrawScenes(const scene_stack &Stack)
 void DrawFadeOverlay(const scene_stack &Stack)
 {
   f32 Amount = GetFadeAmount(Stack);
-  if (Amount > 0.f) { DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, Amount)); }
+  if (Amount > 0.F) { DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, Amount)); }
 }
 
 scene_id GetTopScene(const scene_stack &Stack) { return Stack.Ids[Stack.Count > 0 ? Stack.Count - 1 : 0]; }
@@ -102,11 +102,11 @@ f32 GetFadeAmount(const scene_stack &Stack)
   case FADE_OUT:
     return Stack.FadeTimer / FADE_SECONDS;
   case FADE_IN:
-    return 1.f - Stack.FadeTimer / FADE_SECONDS;
+    return 1.F - Stack.FadeTimer / FADE_SECONDS;
   case FADE_NONE:
     break;
   }
-  return 0.f;
+  return 0.F;
 }
 
 bool IsFading(const scene_stack &Stack) { return Stack.Fade != FADE_NONE; }
