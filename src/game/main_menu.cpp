@@ -14,7 +14,7 @@ enum main_menu_action : u8 {
   MAIN_EXIT,
 };
 
-static u32 GetMainMenuItems(menu_item *Out)
+static std::span<const menu_item> GetMainMenuItems(menu_item_list &Out)
 {
   bool HasSave = Game->MainMenu.HasSave;
   u32 Count = 0;
@@ -24,7 +24,7 @@ static u32 GetMainMenuItems(menu_item *Out)
 #if !defined(__EMSCRIPTEN__)
   Out[Count++] = { .Label = "Exit", .Action = MAIN_EXIT, .Kind = ITEM_FOOTER };
 #endif
-  return Count;
+  return std::span(Out).first(Count);
 }
 
 void EnterMainMenu()
@@ -35,9 +35,8 @@ void EnterMainMenu()
 
 void UpdateMainMenu(f32)
 {
-  menu_item Items[MAX_MENU_ITEMS];
-  u32 Count = GetMainMenuItems(Items);
-  switch (UpdateMenu(Game->MainMenu.Menu, Items, Count, Game->Input, NO_ACTION)) {
+  menu_item_list Items;
+  switch (UpdateMenu(Game->MainMenu.Menu, GetMainMenuItems(Items), Game->Input, NO_ACTION)) {
   case MAIN_CONTINUE:
     ChangeScene(Game->Scenes, SCENE_PLAY);
     break;
@@ -62,9 +61,8 @@ void UpdateMainMenu(f32)
 
 void DrawMainMenu()
 {
-  menu_item Items[MAX_MENU_ITEMS];
-  u32 Count = GetMainMenuItems(Items);
+  menu_item_list Items;
   DrawRectangleV({ .x = 0.F, .y = 0.F }, { .x = UI_WIDTH, .y = UI_HEIGHT }, MAIN_MENU_BACKGROUND);
   DrawCenteredText(GAME_TITLE, LOGO_Y, LOGO_FONT_SIZE, LOGO_TEXT);
-  DrawMenu(Game->MainMenu.Menu, "Main menu", Items, Count, DEFAULT_MENU_THEME);
+  DrawMenu(Game->MainMenu.Menu, "Main menu", GetMainMenuItems(Items), DEFAULT_MENU_THEME);
 }

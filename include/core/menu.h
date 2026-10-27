@@ -3,7 +3,9 @@
 #include "core/input.h"
 #include "core/types.h"
 
+#include <array>
 #include <raylib.h>
+#include <span>
 
 constexpr u8 NO_ACTION = 0xff;
 constexpr u32 MAX_MENU_ITEMS = 8;
@@ -40,6 +42,8 @@ struct menu_item
   bool *Toggle = nullptr;
 };
 
+using menu_item_list = std::array<menu_item, MAX_MENU_ITEMS>;
+
 struct menu_state
 { u32 Focus = 0; };
 
@@ -74,7 +78,7 @@ constexpr menu_theme DEFAULT_MENU_THEME = {
   .Fill = { .r = 242, .g = 179, .b = 61, .a = 255 },
 };
 
-Rectangle GetMenuItemRect(const menu_item *Items, u32 Count, u32 Index);
+Rectangle GetMenuItemRect(std::span<const menu_item> Items, u32 Index);
 Rectangle GetSliderTrack(Rectangle Item);
-u8 UpdateMenu(menu_state &State, const menu_item *Items, u32 Count, const frame_input &Input, u8 BackAction);
-void DrawMenu(const menu_state &State, const char *Title, const menu_item *Items, u32 Count, const menu_theme &Theme);
+u8 UpdateMenu(menu_state &State, std::span<const menu_item> Items, const frame_input &Input, u8 BackAction);
+void DrawMenu(const menu_state &State, const char *Title, std::span<const menu_item> Items, const menu_theme &Theme);

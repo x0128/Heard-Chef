@@ -8,22 +8,21 @@ enum pause_action : u8 {
   PAUSE_QUIT,
 };
 
-static u32 GetPauseItems(menu_item *Out)
+static std::span<const menu_item> GetPauseItems(menu_item_list &Out)
 {
   u32 Count = 0;
   Out[Count++] = { .Label = "Resume", .Action = PAUSE_RESUME, .Kind = ITEM_PRIMARY };
   Out[Count++] = { .Label = "Settings", .Action = PAUSE_SETTINGS, .Kind = ITEM_BUTTON };
   Out[Count++] = { .Label = "Quit to menu", .Action = PAUSE_QUIT, .Kind = ITEM_FOOTER };
-  return Count;
+  return std::span(Out).first(Count);
 }
 
 void EnterPause() { Game->Pause = {}; }
 
 void UpdatePause(f32)
 {
-  menu_item Items[MAX_MENU_ITEMS];
-  u32 Count = GetPauseItems(Items);
-  switch (UpdateMenu(Game->Pause.Menu, Items, Count, Game->Input, PAUSE_RESUME)) {
+  menu_item_list Items;
+  switch (UpdateMenu(Game->Pause.Menu, GetPauseItems(Items), Game->Input, PAUSE_RESUME)) {
   case PAUSE_RESUME:
     PopScene(Game->Scenes);
     break;
@@ -40,8 +39,7 @@ void UpdatePause(f32)
 
 void DrawPause()
 {
-  menu_item Items[MAX_MENU_ITEMS];
-  u32 Count = GetPauseItems(Items);
+  menu_item_list Items;
   DrawRectangleV({ .x = 0.F, .y = 0.F }, { .x = UI_WIDTH, .y = UI_HEIGHT }, Fade(BLACK, OVERLAY_DIM));
-  DrawMenu(Game->Pause.Menu, "Paused", Items, Count, DEFAULT_MENU_THEME);
+  DrawMenu(Game->Pause.Menu, "Paused", GetPauseItems(Items), DEFAULT_MENU_THEME);
 }

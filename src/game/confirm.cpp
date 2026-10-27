@@ -10,12 +10,12 @@ enum confirm_action : u8 {
   CONFIRM_NO,
 };
 
-static u32 GetConfirmItems(menu_item *Out)
+static std::span<const menu_item> GetConfirmItems(menu_item_list &Out)
 {
   u32 Count = 0;
   Out[Count++] = { .Label = "Yes, start over", .Action = CONFIRM_YES, .Kind = ITEM_PRIMARY };
   Out[Count++] = { .Label = "No", .Action = CONFIRM_NO, .Kind = ITEM_FOOTER };
-  return Count;
+  return std::span(Out).first(Count);
 }
 
 void EnterConfirm()
@@ -26,9 +26,8 @@ void EnterConfirm()
 
 void UpdateConfirm(f32)
 {
-  menu_item Items[MAX_MENU_ITEMS];
-  u32 Count = GetConfirmItems(Items);
-  switch (UpdateMenu(Game->Confirm.Menu, Items, Count, Game->Input, CONFIRM_NO)) {
+  menu_item_list Items;
+  switch (UpdateMenu(Game->Confirm.Menu, GetConfirmItems(Items), Game->Input, CONFIRM_NO)) {
   case CONFIRM_YES:
     WriteNewPlaySave();
     ChangeScene(Game->Scenes, SCENE_PLAY);
@@ -43,9 +42,8 @@ void UpdateConfirm(f32)
 
 void DrawConfirm()
 {
-  menu_item Items[MAX_MENU_ITEMS];
-  u32 Count = GetConfirmItems(Items);
+  menu_item_list Items;
   DrawRectangleV({ .x = 0.F, .y = 0.F }, { .x = UI_WIDTH, .y = UI_HEIGHT }, Fade(BLACK, SOLID_OVERLAY_DIM));
   DrawCenteredText("Your save will be replaced.", CONFIRM_TEXT_Y, MENU_FONT_SIZE, CONFIRM_TEXT);
-  DrawMenu(Game->Confirm.Menu, "Start a new game?", Items, Count, DEFAULT_MENU_THEME);
+  DrawMenu(Game->Confirm.Menu, "Start a new game?", GetConfirmItems(Items), DEFAULT_MENU_THEME);
 }

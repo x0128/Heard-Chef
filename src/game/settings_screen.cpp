@@ -6,7 +6,7 @@ enum settings_action : u8 {
   SETTINGS_BACK,
 };
 
-static u32 GetSettingsItems(menu_item *Out)
+static std::span<const menu_item> GetSettingsItems(menu_item_list &Out)
 {
   settings &Settings = Game->Settings;
   u32 Count = 0;
@@ -17,16 +17,15 @@ static u32 GetSettingsItems(menu_item *Out)
   Out[Count++] = { .Label = "Fullscreen", .Action = SETTINGS_CHANGED, .Kind = ITEM_TOGGLE, .Slider = nullptr, .Toggle = &Settings.Fullscreen };
 #endif
   Out[Count++] = { .Label = "Back", .Action = SETTINGS_BACK, .Kind = ITEM_FOOTER };
-  return Count;
+  return std::span(Out).first(Count);
 }
 
 void EnterSettingsScreen() { Game->SettingsScreen = {}; }
 
 void UpdateSettingsScreen(f32)
 {
-  menu_item Items[MAX_MENU_ITEMS];
-  u32 Count = GetSettingsItems(Items);
-  switch (UpdateMenu(Game->SettingsScreen.Menu, Items, Count, Game->Input, SETTINGS_BACK)) {
+  menu_item_list Items;
+  switch (UpdateMenu(Game->SettingsScreen.Menu, GetSettingsItems(Items), Game->Input, SETTINGS_BACK)) {
   case SETTINGS_CHANGED:
     ApplySettings(Game->Settings);
     SaveSettings(SETTINGS_FILE, Game->Settings);
@@ -42,8 +41,7 @@ void UpdateSettingsScreen(f32)
 
 void DrawSettingsScreen()
 {
-  menu_item Items[MAX_MENU_ITEMS];
-  u32 Count = GetSettingsItems(Items);
+  menu_item_list Items;
   DrawRectangleV({ .x = 0.F, .y = 0.F }, { .x = UI_WIDTH, .y = UI_HEIGHT }, Fade(BLACK, SOLID_OVERLAY_DIM));
-  DrawMenu(Game->SettingsScreen.Menu, "Settings", Items, Count, DEFAULT_MENU_THEME);
+  DrawMenu(Game->SettingsScreen.Menu, "Settings", GetSettingsItems(Items), DEFAULT_MENU_THEME);
 }
