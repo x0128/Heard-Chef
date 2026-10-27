@@ -18,7 +18,9 @@ Checks: "*,
         -misc-use-internal-linkage,
         -bugprone-easily-swappable-parameters,
         -cppcoreguidelines-pro-type-reinterpret-cast,
-        -readability-math-missing-parentheses
+        -readability-math-missing-parentheses,
+        -readability-magic-numbers,
+        -cppcoreguidelines-avoid-magic-numbers
 "
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
