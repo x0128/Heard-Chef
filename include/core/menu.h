@@ -19,16 +19,12 @@ constexpr f32 MENU_PADDING = 16.F;
 constexpr f32 MENU_TITLE_HEIGHT = 40.F;
 constexpr f32 MENU_ITEM_HEIGHT = 56.F;
 constexpr f32 MENU_ITEM_GAP = 8.F;
-constexpr f32 MENU_FOOTER_GAP = 20.F;
-constexpr f32 MENU_FOOTER_WIDTH = 180.F;
-constexpr f32 MENU_FOOTER_HEIGHT = 48.F;
 constexpr int MENU_TITLE_FONT_SIZE = 28;
 constexpr int MENU_FONT_SIZE = 24;
 
 enum menu_item_kind : u8 {
   ITEM_BUTTON,
   ITEM_PRIMARY,
-  ITEM_FOOTER,
   ITEM_SLIDER,
   ITEM_TOGGLE,
 };
@@ -56,8 +52,6 @@ struct menu_theme
   Color ButtonText;
   Color Primary;
   Color PrimaryText;
-  Color Footer;
-  Color FooterText;
   Color Focus;
   Color Track;
   Color Fill;
@@ -71,8 +65,6 @@ constexpr menu_theme DEFAULT_MENU_THEME = {
   .ButtonText = { .r = 226, .g = 222, .b = 210, .a = 255 },
   .Primary = { .r = 242, .g = 179, .b = 61, .a = 255 },
   .PrimaryText = { .r = 32, .g = 24, .b = 12, .a = 255 },
-  .Footer = { .r = 92, .g = 46, .b = 40, .a = 255 },
-  .FooterText = { .r = 240, .g = 200, .b = 190, .a = 255 },
   .Focus = { .r = 255, .g = 230, .b = 192, .a = 255 },
   .Track = { .r = 24, .g = 26, .b = 34, .a = 255 },
   .Fill = { .r = 242, .g = 179, .b = 61, .a = 255 },

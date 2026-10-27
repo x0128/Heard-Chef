@@ -13,7 +13,7 @@ static std::span<const menu_item> GetPauseItems(menu_item_list &Out)
   u32 Count = 0;
   Out[Count++] = { .Label = "Resume", .Action = PAUSE_RESUME, .Kind = ITEM_PRIMARY };
   Out[Count++] = { .Label = "Settings", .Action = PAUSE_SETTINGS, .Kind = ITEM_BUTTON };
-  Out[Count++] = { .Label = "Quit to menu", .Action = PAUSE_QUIT, .Kind = ITEM_FOOTER };
+  Out[Count++] = { .Label = "Quit to menu", .Action = PAUSE_QUIT, .Kind = ITEM_BUTTON };
   return std::span(Out).first(Count);
 }
 

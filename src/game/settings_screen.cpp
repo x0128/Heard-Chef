@@ -16,7 +16,7 @@ static std::span<const menu_item> GetSettingsItems(menu_item_list &Out)
 #if !defined(__EMSCRIPTEN__)
   Out[Count++] = { .Label = "Fullscreen", .Action = SETTINGS_CHANGED, .Kind = ITEM_TOGGLE, .Slider = nullptr, .Toggle = &Settings.Fullscreen };
 #endif
-  Out[Count++] = { .Label = "Back", .Action = SETTINGS_BACK, .Kind = ITEM_FOOTER };
+  Out[Count++] = { .Label = "Back", .Action = SETTINGS_BACK, .Kind = ITEM_BUTTON };
   return std::span(Out).first(Count);
 }
 

@@ -15,37 +15,18 @@ constexpr f32 TRACK_ROUNDNESS = 0.5F;
 constexpr f32 PANEL_ROUNDNESS = 0.06F;
 constexpr f32 PANEL_EDGE_THICKNESS = 2.F;
 
-static u32 CountBodyItems(std::span<const menu_item> Items)
-{
-  u32 Body = 0;
-  for (const menu_item &Item : Items) {
-    if (Item.Kind != ITEM_FOOTER) { ++Body; }
-  }
-  return Body;
-}
-
 static Rectangle GetPanelRect(std::span<const menu_item> Items)
 {
-  u32 Body = CountBodyItems(Items);
+  const u32 Count = static_cast<u32>(Items.size());
   f32 Height = MENU_PADDING * 2 + MENU_TITLE_HEIGHT;
-  if (Body > 0) { Height += static_cast<f32>(Body) * MENU_ITEM_HEIGHT + static_cast<f32>(Body - 1) * MENU_ITEM_GAP; }
+  if (Count > 0) { Height += static_cast<f32>(Count) * MENU_ITEM_HEIGHT + static_cast<f32>(Count - 1) * MENU_ITEM_GAP; }
   return { .x = (UI_WIDTH - MENU_WIDTH) * HALF, .y = MENU_TOP, .width = MENU_WIDTH, .height = Height };
 }
 
 Rectangle GetMenuItemRect(std::span<const menu_item> Items, u32 Index)
 {
   Rectangle Panel = GetPanelRect(Items);
-  u32 Slot = 0;
-  for (const menu_item &Before : Items.first(Index)) {
-    if ((Before.Kind == ITEM_FOOTER) == (Items[Index].Kind == ITEM_FOOTER)) { ++Slot; }
-  }
-  if (Items[Index].Kind == ITEM_FOOTER) {
-    return { .x = Panel.x + static_cast<f32>(Slot) * (MENU_FOOTER_WIDTH + MENU_ITEM_GAP),
-      .y = Panel.y + Panel.height + MENU_FOOTER_GAP,
-      .width = MENU_FOOTER_WIDTH,
-      .height = MENU_FOOTER_HEIGHT };
-  }
-  f32 PosY = Panel.y + MENU_PADDING + MENU_TITLE_HEIGHT + static_cast<f32>(Slot) * (MENU_ITEM_HEIGHT + MENU_ITEM_GAP);
+  f32 PosY = Panel.y + MENU_PADDING + MENU_TITLE_HEIGHT + static_cast<f32>(Index) * (MENU_ITEM_HEIGHT + MENU_ITEM_GAP);
   return { .x = Panel.x + MENU_PADDING, .y = PosY, .width = Panel.width - MENU_PADDING * 2, .height = MENU_ITEM_HEIGHT };
 }
 
@@ -150,18 +131,10 @@ static void DrawToggleBox(Rectangle Rect, bool Checked, const menu_theme &Theme)
 
 static void DrawItem(const menu_item &Item, Rectangle Rect, const menu_theme &Theme)
 {
-  Color Background = Theme.Button;
-  Color Text = Theme.ButtonText;
-  if (Item.Kind == ITEM_PRIMARY) {
-    Background = Theme.Primary;
-    Text = Theme.PrimaryText;
-  } else if (Item.Kind == ITEM_FOOTER) {
-    Background = Theme.Footer;
-    Text = Theme.FooterText;
-  }
+  const bool Primary = Item.Kind == ITEM_PRIMARY;
   const bool HasControl = Item.Kind == ITEM_SLIDER || Item.Kind == ITEM_TOGGLE;
-  DrawRectangleRounded(Rect, MENU_ROUNDNESS, MENU_SEGMENTS, Background);
-  DrawLabel(Item.Label, Rect, !HasControl, Text);
+  DrawRectangleRounded(Rect, MENU_ROUNDNESS, MENU_SEGMENTS, Primary ? Theme.Primary : Theme.Button);
+  DrawLabel(Item.Label, Rect, !HasControl, Primary ? Theme.PrimaryText : Theme.ButtonText);
   if (Item.Kind == ITEM_SLIDER) { DrawSliderTrack(Rect, *Item.Slider, Theme); }
   if (Item.Kind == ITEM_TOGGLE) { DrawToggleBox(Rect, *Item.Toggle, Theme); }
 }

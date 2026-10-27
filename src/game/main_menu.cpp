@@ -22,7 +22,7 @@ static std::span<const menu_item> GetMainMenuItems(menu_item_list &Out)
   Out.at(Count++) = { .Label = "New game", .Action = MAIN_NEW_GAME, .Kind = HasSave ? ITEM_BUTTON : ITEM_PRIMARY };
   Out.at(Count++) = { .Label = "Settings", .Action = MAIN_SETTINGS, .Kind = ITEM_BUTTON };
 #if !defined(__EMSCRIPTEN__)
-  Out.at(Count++) = { .Label = "Exit", .Action = MAIN_EXIT, .Kind = ITEM_FOOTER };
+  Out.at(Count++) = { .Label = "Exit", .Action = MAIN_EXIT, .Kind = ITEM_BUTTON };
 #endif
   return std::span(Out).first(Count);
 }

@@ -14,7 +14,7 @@ static std::span<const menu_item> GetConfirmItems(menu_item_list &Out)
 {
   u32 Count = 0;
   Out[Count++] = { .Label = "Yes, start over", .Action = CONFIRM_YES, .Kind = ITEM_PRIMARY };
-  Out[Count++] = { .Label = "No", .Action = CONFIRM_NO, .Kind = ITEM_FOOTER };
+  Out[Count++] = { .Label = "No", .Action = CONFIRM_NO, .Kind = ITEM_BUTTON };
   return std::span(Out).first(Count);
 }
 
