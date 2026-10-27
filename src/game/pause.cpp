@@ -1,5 +1,3 @@
-#include "game/pause.h"
-
 #include "core/ui.h"
 #include "game/game.h"
 #include "game/scene_list.h"
@@ -21,7 +19,7 @@ static u32 GetPauseItems(menu_item *Out)
 
 void EnterPause() { Game->Pause = {}; }
 
-void UpdatePause(f32 /*Deltatime*/)
+void UpdatePause(f32)
 {
   menu_item Items[MAX_MENU_ITEMS];
   u32 Count = GetPauseItems(Items);

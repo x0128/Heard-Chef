@@ -4,12 +4,7 @@
 #include "core/loop.h"
 #include "core/scenes.h"
 #include "core/settings.h"
-#include "game/confirm.h"
-#include "game/main_menu.h"
-#include "game/pause.h"
-#include "game/play.h"
-#include "game/settings_screen.h"
-#include "game/title.h"
+#include "game/scene_list.h"
 
 constexpr const char *GAME_TITLE = "GAME TITLE";
 constexpr const char *SAVE_FILE = "game_save.bin";

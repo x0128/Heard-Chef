@@ -1,5 +1,3 @@
-#include "game/settings_screen.h"
-
 #include "core/ui.h"
 #include "game/game.h"
 
@@ -24,7 +22,7 @@ static u32 GetSettingsItems(menu_item *Out)
 
 void EnterSettingsScreen() { Game->SettingsScreen = {}; }
 
-void UpdateSettingsScreen(f32 /*Deltatime*/)
+void UpdateSettingsScreen(f32)
 {
   menu_item Items[MAX_MENU_ITEMS];
   u32 Count = GetSettingsItems(Items);

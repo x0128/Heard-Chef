@@ -1,11 +1,25 @@
-#include "game/play.h"
-
 #include "core/save.h"
+#include "core/ui.h"
 #include "game/game.h"
 #include "game/scene_list.h"
 
 #include <cmath>
 #include <raymath.h>
+
+constexpr f32 PLAY_SPEED = 300.F;
+constexpr f32 SQUARE_SIZE = 40.F;
+constexpr f32 HALF_SQUARE_SIZE = SQUARE_SIZE * HALF;
+constexpr f32 STICK_DEADZONE = 0.2F;
+constexpr Vector2 PLAY_START = { .x = UI_WIDTH * HALF, .y = UI_HEIGHT * HALF };
+constexpr Color PLAY_BACKGROUND = { .r = 38, .g = 44, .b = 58, .a = 255 };
+constexpr Color SQUARE_COLOR = { .r = 242, .g = 179, .b = 61, .a = 255 };
+
+constexpr u32 PLAY_SAVE_MAGIC = 0x504c4159;
+constexpr u32 PLAY_SAVE_VERSION = 1;
+constexpr f32 PLAY_SAVE_SECONDS = 5.F;
+
+struct play_save
+{ Vector2 Position; };
 
 static f32 ReadStickAxis(GamepadAxis Axis)
 {
@@ -40,13 +54,12 @@ bool HasPlaySave()
 
 void WriteNewPlaySave() { WritePlaySave({ PLAY_START }); }
 
-void SavePlay() { WritePlaySave({ Game->Play.Position }); }
+static void SavePlay() { WritePlaySave({ Game->Play.Position }); }
 
 static Vector2 ClampToArena(Vector2 Position)
 {
   if (!std::isfinite(Position.x) || !std::isfinite(Position.y)) { return PLAY_START; }
-  f32 Half = SQUARE_SIZE * 0.5F;
-  return { .x = Clamp(Position.x, Half, UI_WIDTH - Half), .y = Clamp(Position.y, Half, UI_HEIGHT - Half) };
+  return { .x = Clamp(Position.x, HALF_SQUARE_SIZE, UI_WIDTH - HALF_SQUARE_SIZE), .y = Clamp(Position.y, HALF_SQUARE_SIZE, UI_HEIGHT - HALF_SQUARE_SIZE) };
 }
 
 void EnterPlay()
@@ -80,8 +93,7 @@ void UpdatePlay(f32 Deltatime)
 void DrawPlay()
 {
   const play_scene &Play = Game->Play;
-  f32 Half = SQUARE_SIZE * 0.5F;
   Vector2 Drawn = Vector2Lerp(Play.PreviousPosition, Play.Position, GetClockBlend(Game->Clock));
   DrawRectangleV({ .x = 0.F, .y = 0.F }, { .x = UI_WIDTH, .y = UI_HEIGHT }, PLAY_BACKGROUND);
-  DrawRectangleV({ .x = Drawn.x - Half, .y = Drawn.y - Half }, { .x = SQUARE_SIZE, .y = SQUARE_SIZE }, SQUARE_COLOR);
+  DrawRectangleV({ .x = Drawn.x - HALF_SQUARE_SIZE, .y = Drawn.y - HALF_SQUARE_SIZE }, { .x = SQUARE_SIZE, .y = SQUARE_SIZE }, SQUARE_COLOR);
 }

@@ -1,8 +1,11 @@
-#include "game/main_menu.h"
-
 #include "core/ui.h"
 #include "game/game.h"
 #include "game/scene_list.h"
+
+constexpr int LOGO_FONT_SIZE = 64;
+constexpr f32 LOGO_Y = 44.F;
+constexpr Color MAIN_MENU_BACKGROUND = { .r = 20, .g = 22, .b = 30, .a = 255 };
+constexpr Color LOGO_TEXT = { .r = 236, .g = 232, .b = 220, .a = 255 };
 
 enum main_menu_action : u8 {
   MAIN_CONTINUE,
@@ -30,7 +33,7 @@ void EnterMainMenu()
   Game->MainMenu.HasSave = HasPlaySave();
 }
 
-void UpdateMainMenu(f32 /*Deltatime*/)
+void UpdateMainMenu(f32)
 {
   menu_item Items[MAX_MENU_ITEMS];
   u32 Count = GetMainMenuItems(Items);

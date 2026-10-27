@@ -1,8 +1,9 @@
-#include "game/confirm.h"
-
 #include "core/ui.h"
 #include "game/game.h"
 #include "game/scene_list.h"
+
+constexpr f32 CONFIRM_TEXT_Y = 360.F;
+constexpr Color CONFIRM_TEXT = { .r = 236, .g = 232, .b = 220, .a = 255 };
 
 enum confirm_action : u8 {
   CONFIRM_YES,
@@ -23,7 +24,7 @@ void EnterConfirm()
   Game->Confirm.Menu.Focus = 1;
 }
 
-void UpdateConfirm(f32 /*Deltatime*/)
+void UpdateConfirm(f32)
 {
   menu_item Items[MAX_MENU_ITEMS];
   u32 Count = GetConfirmItems(Items);
