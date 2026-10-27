@@ -1,4 +1,7 @@
 #include "core/loop.h"
+#include "core/config.h"
+
+constexpr u32 MAX_STEPS_PER_FRAME = 5;
 
 u32 AdvanceClock(fixed_clock &Clock, f32 FrameTime)
 {
@@ -8,7 +11,7 @@ u32 AdvanceClock(fixed_clock &Clock, f32 FrameTime)
     Clock.Accumulator -= FIXED_STEP;
     ++Steps;
   }
-  if (Steps == MAX_STEPS_PER_FRAME) { Clock.Accumulator = 0.f; }
+  if (Steps == MAX_STEPS_PER_FRAME) { Clock.Accumulator = 0.F; }
   return Steps;
 }
 

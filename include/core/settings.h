@@ -5,11 +5,13 @@
 constexpr u32 SETTINGS_MAGIC = 0x53455454;
 constexpr u32 SETTINGS_VERSION = 1;
 
+constexpr f32 DEFAULT_AUDIO_VOLUME = 0.85F;
+
 struct settings
 {
-  f32 MasterVolume = 0.8f;
-  f32 MusicVolume = 0.8f;
-  f32 SfxVolume = 0.8f;
+  f32 MasterVolume = DEFAULT_AUDIO_VOLUME;
+  f32 MusicVolume = DEFAULT_AUDIO_VOLUME;
+  f32 SfxVolume = DEFAULT_AUDIO_VOLUME;
   bool Fullscreen = false;
 };
 

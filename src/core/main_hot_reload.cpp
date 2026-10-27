@@ -3,8 +3,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
-#include <cstdio>
+// #include <cstdio>
 #include <cstring>
+#include <format>
 #include <windows.h>
 
 constexpr const char *GAME_DLL_NAME = "game.dll";
@@ -32,14 +33,14 @@ struct game_api_table
 static bool GetWriteTime(const char *Path, FILETIME &Time)
 {
   WIN32_FILE_ATTRIBUTE_DATA Data;
-  if (!GetFileAttributesExA(Path, GetFileExInfoStandard, &Data)) { return false; }
+  if (GetFileAttributesExA(Path, GetFileExInfoStandard, &Data) == FALSE) { return false; }
   Time = Data.ftLastWriteTime;
   return true;
 }
 
 static bool IsBuildLocked() { return GetFileAttributesA(GAME_LOCK_NAME) != INVALID_FILE_ATTRIBUTES; }
 
-static void GetCopyName(u32 Version, char *Out, umm Size) { snprintf(Out, Size, "game_%u.dll", Version); }
+static void GetCopyName(u32 Version, char *Out, umm Size) { std::snprintf(Out, Size, "%s", std::format("game_{}.dll", Version).c_str()); }
 
 template<typename T> static bool LoadSymbol(HMODULE Library, const char *Name, T &Out)
 {

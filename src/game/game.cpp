@@ -1,5 +1,6 @@
 #include "game/game.h"
 
+#include "core/config.h"
 #include "core/game_api.h"
 #include "core/ui.h"
 #include "game/scene_list.h"

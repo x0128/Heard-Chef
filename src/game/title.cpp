@@ -4,20 +4,26 @@
 #include "game/game.h"
 #include "game/scene_list.h"
 
-#include <cmath>
+constexpr int TITLE_FONT_SIZE = 72;
+constexpr int PROMPT_FONT_SIZE = 24;
+constexpr f32 PROMPT_BLINK_SECONDS = 1.F;
+constexpr f32 PROMPT_VISIBLE_SECONDS = 0.6F;
+constexpr Color TITLE_BACKGROUND = { .r = 20, .g = 22, .b = 30, .a = 255 };
+constexpr Color TITLE_TEXT = { .r = 236, .g = 232, .b = 220, .a = 255 };
+constexpr Color PROMPT_TEXT = { .r = 150, .g = 156, .b = 170, .a = 255 };
 
 void EnterTitle() { Game->Title = {}; }
 
-void UpdateTitle(f32 Dt)
+void UpdateTitle(f32 Deltatime)
 {
-  Game->Title.Time += Dt;
+  Game->Title.Time += Deltatime;
   if (Game->Input.AnyPressed) { ChangeScene(Game->Scenes, SCENE_MAIN_MENU); }
 }
 
 void DrawTitle()
 {
-  DrawRectangleV({ 0.f, 0.f }, { UI_WIDTH, UI_HEIGHT }, TITLE_BACKGROUND);
-  DrawCenteredText(GAME_TITLE, UI_HEIGHT * 0.38f, TITLE_FONT_SIZE, TITLE_TEXT);
+  DrawRectangleV({ .x = 0.F, .y = 0.F }, { .x = UI_WIDTH, .y = UI_HEIGHT }, TITLE_BACKGROUND);
+  DrawCenteredText(GAME_TITLE, UI_HEIGHT * 0.38F, TITLE_FONT_SIZE, TITLE_TEXT);
   if (fmodf(Game->Title.Time, PROMPT_BLINK_SECONDS) < PROMPT_VISIBLE_SECONDS) {
     DrawCenteredText("press any key", UI_HEIGHT * 0.62f, PROMPT_FONT_SIZE, PROMPT_TEXT);
   }

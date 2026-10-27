@@ -1,11 +1,12 @@
 #pragma once
 
 #include "core/types.h"
+#include <array>
 
 using scene_id = u8;
 
 constexpr u32 MAX_SCENE_DEPTH = 4;
-constexpr f32 FADE_SECONDS = 0.2f;
+constexpr f32 FADE_SECONDS = 0.2F;
 
 enum fade_phase : u8 {
   FADE_NONE,
@@ -15,10 +16,10 @@ enum fade_phase : u8 {
 
 struct scene_stack
 {
-  scene_id Ids[MAX_SCENE_DEPTH] = {};
+  std::array<scene_id, MAX_SCENE_DEPTH> Ids = {};
   u32 Count = 0;
   fade_phase Fade = FADE_NONE;
-  f32 FadeTimer = 0.f;
+  f32 FadeTimer = 0.F;
   scene_id Next = 0;
 };
 
@@ -28,7 +29,7 @@ void PushScene(scene_stack &Stack, scene_id Scene);
 void PopScene(scene_stack &Stack);
 void StopScenes(scene_stack &Stack);
 
-void UpdateScenes(scene_stack &Stack, f32 Dt);
+void UpdateScenes(scene_stack &Stack, f32 Deltatime);
 void DrawScenes(const scene_stack &Stack);
 void DrawFadeOverlay(const scene_stack &Stack);
 
@@ -38,5 +39,5 @@ bool IsFading(const scene_stack &Stack);
 
 void EnterScene(scene_id Scene);
 void ExitScene(scene_id Scene);
-void UpdateScene(scene_id Scene, f32 Dt);
+void UpdateScene(scene_id Scene, f32 Deltatime);
 void DrawScene(scene_id Scene);

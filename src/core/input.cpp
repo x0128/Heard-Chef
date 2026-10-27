@@ -1,5 +1,7 @@
 #include "core/input.h"
 
+constexpr f32 STICK_THRESHOLD = 0.5F;
+
 static bool IsKeyTapped(KeyboardKey Key) { return IsKeyPressed(Key) || IsKeyPressedRepeat(Key); }
 
 static s8 GetStickDirection(f32 Value)
@@ -39,17 +41,17 @@ frame_input ReadFrameInput(stick_state &Stick, const Camera2D &UiCamera)
     Input.Pressed[ACTION_BACK] |= IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT);
     Input.Pressed[ACTION_PAUSE] |= IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT);
 
-    s8 X = GetStickDirection(GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X));
-    s8 Y = GetStickDirection(GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y));
-    if (Y != Stick.Y) {
-      Input.Pressed[ACTION_UP] |= Y < 0;
-      Input.Pressed[ACTION_DOWN] |= Y > 0;
+    s8 InputX = GetStickDirection(GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X));
+    s8 InputY = GetStickDirection(GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y));
+    if (InputY != Stick.Y) {
+      Input.Pressed[ACTION_UP] |= InputY < 0;
+      Input.Pressed[ACTION_DOWN] |= InputY > 0;
     }
-    if (X != Stick.X) {
-      Input.Pressed[ACTION_LEFT] |= X < 0;
-      Input.Pressed[ACTION_RIGHT] |= X > 0;
+    if (InputX != Stick.X) {
+      Input.Pressed[ACTION_LEFT] |= InputX < 0;
+      Input.Pressed[ACTION_RIGHT] |= InputX > 0;
     }
-    Stick = { X, Y };
+    Stick = { .X = InputX, .Y = InputY };
     Input.AnyPressed |= IsAnyGamepadButtonPressed();
   } else {
     Stick = {};
@@ -59,13 +61,13 @@ frame_input ReadFrameInput(stick_state &Stick, const Camera2D &UiCamera)
   Input.AnyPressed |= Input.MouseClicked;
   Input.Mouse = GetScreenToWorld2D(GetMousePosition(), UiCamera);
   Vector2 Delta = GetMouseDelta();
-  Input.MouseMoved = Delta.x != 0.f || Delta.y != 0.f;
+  Input.MouseMoved = Delta.x != 0.F || Delta.y != 0.F;
   return Input;
 }
 
 void MergeInput(frame_input &Pending, const frame_input &Frame)
 {
-  for (u32 Action = 0; Action < ACTION_COUNT; ++Action) { Pending.Pressed[Action] |= Frame.Pressed[Action]; }
+  for (u32 Action = 0; Action < ACTION_COUNT; ++Action) { Pending.Pressed.at(Action) |= Frame.Pressed.at(Action); }
   Pending.AnyPressed |= Frame.AnyPressed;
   Pending.MouseMoved |= Frame.MouseMoved;
   Pending.MouseClicked |= Frame.MouseClicked;
@@ -80,4 +82,4 @@ frame_input TakeInput(frame_input &Pending)
   return Taken;
 }
 
-bool WasPressed(const frame_input &Input, input_action Action) { return Input.Pressed[Action]; }
+bool WasPressed(const frame_input &Input, input_action Action) { return Input.Pressed.at(Action); }
