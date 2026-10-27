@@ -97,7 +97,7 @@ void DrawScene(scene_id Scene)
   }
 }
 
-GAME_EXPORT void game_init_window()
+GAME_EXPORT void GameInitWindow()
 {
   SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
   InitWindow((int)UI_WIDTH, (int)UI_HEIGHT, GAME_TITLE);
@@ -108,7 +108,7 @@ GAME_EXPORT void game_init_window()
   InitAudioDevice();
 }
 
-GAME_EXPORT void game_init()
+GAME_EXPORT void GameInit()
 {
   Game = new game_state{};
   Game->Settings = LoadSettings(SETTINGS_FILE);
@@ -116,7 +116,7 @@ GAME_EXPORT void game_init()
   StartScenes(Game->Scenes, SCENE_TITLE);
 }
 
-GAME_EXPORT void game_update()
+GAME_EXPORT void GameUpdate()
 {
   Camera2D UiCamera = GetUiCamera();
   MergeInput(Game->PendingInput, ReadFrameInput(Game->Stick, UiCamera));
@@ -134,7 +134,7 @@ GAME_EXPORT void game_update()
   EndDrawing();
 }
 
-GAME_EXPORT bool game_should_run()
+GAME_EXPORT bool GameShouldRun()
 {
 #if !defined(__EMSCRIPTEN__)
   if (WindowShouldClose()) { return false; }
@@ -142,27 +142,27 @@ GAME_EXPORT bool game_should_run()
   return Game->Run;
 }
 
-GAME_EXPORT void game_shutdown()
+GAME_EXPORT void GameShutdown()
 {
   StopScenes(Game->Scenes);
   delete Game;
   Game = nullptr;
 }
 
-GAME_EXPORT void game_shutdown_window()
+GAME_EXPORT void GameShutdownWindow()
 {
   CloseAudioDevice();
   CloseWindow();
 }
 
-GAME_EXPORT void *game_memory() { return Game; }
+GAME_EXPORT void *GameMemory() { return Game; }
 
-GAME_EXPORT int game_memory_size() { return (int)sizeof(game_state); }
+GAME_EXPORT int GameMemorySize() { return (int)sizeof(game_state); }
 
-GAME_EXPORT void game_hot_reloaded(void *Memory) { Game = (game_state *)Memory; }
+GAME_EXPORT void GameHotReloaded(void *Memory) { Game = (game_state *)Memory; }
 
-GAME_EXPORT bool game_force_reload() { return IsKeyPressed(KEY_F5); }
+GAME_EXPORT bool GameForceReload() { return IsKeyPressed(KEY_F5); }
 
-GAME_EXPORT bool game_force_restart() { return IsKeyPressed(KEY_F6); }
+GAME_EXPORT bool GameForceRestart() { return IsKeyPressed(KEY_F6); }
 
-GAME_EXPORT void game_parent_window_size_changed(int Width, int Height) { SetWindowSize(Width, Height); }
+GAME_EXPORT void GameParentWindowSizeChanged(int Width, int Height) { SetWindowSize(Width, Height); }

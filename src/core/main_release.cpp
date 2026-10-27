@@ -5,11 +5,11 @@
 int main()
 {
   ChangeDirectory(GetApplicationDirectory());
-  game_init_window();
-  game_init();
-  while (game_should_run()) { game_update(); }
-  game_shutdown();
-  game_shutdown_window();
+  GameInitWindow();
+  GameInit();
+  while (GameShouldRun()) { GameUpdate(); }
+  GameShutdown();
+  GameShutdownWindow();
   return 0;
 }
 

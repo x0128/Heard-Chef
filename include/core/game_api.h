@@ -6,15 +6,15 @@
 #define GAME_EXPORT extern "C"
 #endif
 
-GAME_EXPORT void game_init_window();
-GAME_EXPORT void game_init();
-GAME_EXPORT void game_update();
-GAME_EXPORT bool game_should_run();
-GAME_EXPORT void game_shutdown();
-GAME_EXPORT void game_shutdown_window();
-GAME_EXPORT void *game_memory();
-GAME_EXPORT int game_memory_size();
-GAME_EXPORT void game_hot_reloaded(void *Memory);
-GAME_EXPORT bool game_force_reload();
-GAME_EXPORT bool game_force_restart();
-GAME_EXPORT void game_parent_window_size_changed(int Width, int Height);
+GAME_EXPORT void GameInitWindow();
+GAME_EXPORT void GameInit();
+GAME_EXPORT void GameUpdate();
+GAME_EXPORT bool GameShouldRun();
+GAME_EXPORT void GameShutdown();
+GAME_EXPORT void GameShutdownWindow();
+GAME_EXPORT void *GameMemory();
+GAME_EXPORT int GameMemorySize();
+GAME_EXPORT void GameHotReloaded(void *Memory);
+GAME_EXPORT bool GameForceReload();
+GAME_EXPORT bool GameForceRestart();
+GAME_EXPORT void GameParentWindowSizeChanged(int Width, int Height);

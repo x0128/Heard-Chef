@@ -14,17 +14,17 @@ constexpr u32 MAX_OLD_APIS = 64;
 struct game_api_table
 {
   HMODULE Library;
-  decltype(&game_init_window) InitWindow;
-  decltype(&game_init) Init;
-  decltype(&game_update) Update;
-  decltype(&game_should_run) ShouldRun;
-  decltype(&game_shutdown) Shutdown;
-  decltype(&game_shutdown_window) ShutdownWindow;
-  decltype(&game_memory) Memory;
-  decltype(&game_memory_size) MemorySize;
-  decltype(&game_hot_reloaded) HotReloaded;
-  decltype(&game_force_reload) ForceReload;
-  decltype(&game_force_restart) ForceRestart;
+  decltype(&GameInitWindow) InitWindow;
+  decltype(&GameInit) Init;
+  decltype(&GameUpdate) Update;
+  decltype(&GameShouldRun) ShouldRun;
+  decltype(&GameShutdown) Shutdown;
+  decltype(&GameShutdownWindow) ShutdownWindow;
+  decltype(&GameMemory) Memory;
+  decltype(&GameMemorySize) MemorySize;
+  decltype(&GameHotReloaded) HotReloaded;
+  decltype(&GameForceReload) ForceReload;
+  decltype(&GameForceRestart) ForceRestart;
   FILETIME WriteTime;
   u32 Version;
 };
@@ -60,12 +60,12 @@ static bool LoadGameApi(u32 Version, game_api_table &Api)
     DeleteFileA(CopyName);
     return false;
   }
-  bool Loaded = LoadSymbol(New.Library, "game_init_window", New.InitWindow) && LoadSymbol(New.Library, "game_init", New.Init)
-                && LoadSymbol(New.Library, "game_update", New.Update) && LoadSymbol(New.Library, "game_should_run", New.ShouldRun)
-                && LoadSymbol(New.Library, "game_shutdown", New.Shutdown) && LoadSymbol(New.Library, "game_shutdown_window", New.ShutdownWindow)
-                && LoadSymbol(New.Library, "game_memory", New.Memory) && LoadSymbol(New.Library, "game_memory_size", New.MemorySize)
-                && LoadSymbol(New.Library, "game_hot_reloaded", New.HotReloaded) && LoadSymbol(New.Library, "game_force_reload", New.ForceReload)
-                && LoadSymbol(New.Library, "game_force_restart", New.ForceRestart);
+  bool Loaded = LoadSymbol(New.Library, "GameInitWindow", New.InitWindow) && LoadSymbol(New.Library, "GameInit", New.Init)
+                && LoadSymbol(New.Library, "GameUpdate", New.Update) && LoadSymbol(New.Library, "GameShouldRun", New.ShouldRun)
+                && LoadSymbol(New.Library, "GameShutdown", New.Shutdown) && LoadSymbol(New.Library, "GameShutdownWindow", New.ShutdownWindow)
+                && LoadSymbol(New.Library, "GameMemory", New.Memory) && LoadSymbol(New.Library, "GameMemorySize", New.MemorySize)
+                && LoadSymbol(New.Library, "GameHotReloaded", New.HotReloaded) && LoadSymbol(New.Library, "GameForceReload", New.ForceReload)
+                && LoadSymbol(New.Library, "GameForceRestart", New.ForceRestart);
   if (!Loaded) {
     FreeLibrary(New.Library);
     DeleteFileA(CopyName);
