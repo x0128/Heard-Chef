@@ -6,167 +6,163 @@
 
 #include <raylib.h>
 
-game_state* Game = nullptr;
+game_state *Game = nullptr;
 
-void EnterScene(scene_id Scene) {
-    switch (Scene) {
-        case SCENE_TITLE:
-            EnterTitle();
-            break;
-        case SCENE_MAIN_MENU:
-            EnterMainMenu();
-            break;
-        case SCENE_PAUSE:
-            EnterPause();
-            break;
-        case SCENE_CONFIRM:
-            EnterConfirm();
-            break;
-        case SCENE_SETTINGS:
-            EnterSettingsScreen();
-            break;
-        case SCENE_PLAY:
-            EnterPlay();
-            break;
-        default:
-            break;
-    }
+void EnterScene(scene_id Scene)
+{
+  switch (Scene) {
+  case SCENE_TITLE:
+    EnterTitle();
+    break;
+  case SCENE_MAIN_MENU:
+    EnterMainMenu();
+    break;
+  case SCENE_PAUSE:
+    EnterPause();
+    break;
+  case SCENE_CONFIRM:
+    EnterConfirm();
+    break;
+  case SCENE_SETTINGS:
+    EnterSettingsScreen();
+    break;
+  case SCENE_PLAY:
+    EnterPlay();
+    break;
+  default:
+    break;
+  }
 }
 
-void ExitScene(scene_id Scene) {
-    switch (Scene) {
-        case SCENE_PLAY:
-            ExitPlay();
-            break;
-        default:
-            break;
-    }
+void ExitScene(scene_id Scene)
+{
+  switch (Scene) {
+  case SCENE_PLAY:
+    ExitPlay();
+    break;
+  default:
+    break;
+  }
 }
 
-void UpdateScene(scene_id Scene, f32 Dt) {
-    switch (Scene) {
-        case SCENE_TITLE:
-            UpdateTitle(Dt);
-            break;
-        case SCENE_MAIN_MENU:
-            UpdateMainMenu();
-            break;
-        case SCENE_PAUSE:
-            UpdatePause();
-            break;
-        case SCENE_CONFIRM:
-            UpdateConfirm();
-            break;
-        case SCENE_SETTINGS:
-            UpdateSettingsScreen();
-            break;
-        case SCENE_PLAY:
-            UpdatePlay(Dt);
-            break;
-        default:
-            break;
-    }
+void UpdateScene(scene_id Scene, f32 Dt)
+{
+  switch (Scene) {
+  case SCENE_TITLE:
+    UpdateTitle(Dt);
+    break;
+  case SCENE_MAIN_MENU:
+    UpdateMainMenu();
+    break;
+  case SCENE_PAUSE:
+    UpdatePause();
+    break;
+  case SCENE_CONFIRM:
+    UpdateConfirm();
+    break;
+  case SCENE_SETTINGS:
+    UpdateSettingsScreen();
+    break;
+  case SCENE_PLAY:
+    UpdatePlay(Dt);
+    break;
+  default:
+    break;
+  }
 }
 
-void DrawScene(scene_id Scene) {
-    switch (Scene) {
-        case SCENE_TITLE:
-            DrawTitle();
-            break;
-        case SCENE_MAIN_MENU:
-            DrawMainMenu();
-            break;
-        case SCENE_PAUSE:
-            DrawPause();
-            break;
-        case SCENE_CONFIRM:
-            DrawConfirm();
-            break;
-        case SCENE_SETTINGS:
-            DrawSettingsScreen();
-            break;
-        case SCENE_PLAY:
-            DrawPlay();
-            break;
-        default:
-            break;
-    }
+void DrawScene(scene_id Scene)
+{
+  switch (Scene) {
+  case SCENE_TITLE:
+    DrawTitle();
+    break;
+  case SCENE_MAIN_MENU:
+    DrawMainMenu();
+    break;
+  case SCENE_PAUSE:
+    DrawPause();
+    break;
+  case SCENE_CONFIRM:
+    DrawConfirm();
+    break;
+  case SCENE_SETTINGS:
+    DrawSettingsScreen();
+    break;
+  case SCENE_PLAY:
+    DrawPlay();
+    break;
+  default:
+    break;
+  }
 }
 
-GAME_EXPORT void game_init_window() {
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
-    InitWindow((int)UI_WIDTH, (int)UI_HEIGHT, GAME_TITLE);
+GAME_EXPORT void game_init_window()
+{
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
+  InitWindow((int)UI_WIDTH, (int)UI_HEIGHT, GAME_TITLE);
 #if !defined(__EMSCRIPTEN__)
-    SetWindowMinSize(640, 360);
+  SetWindowMinSize(640, 360);
 #endif
-    SetExitKey(KEY_NULL);
-    InitAudioDevice();
+  SetExitKey(KEY_NULL);
+  InitAudioDevice();
 }
 
-GAME_EXPORT void game_init() {
-    Game = new game_state{};
-    Game->Settings = LoadSettings(SETTINGS_FILE);
-    ApplySettings(Game->Settings);
-    StartScenes(Game->Scenes, SCENE_TITLE);
+GAME_EXPORT void game_init()
+{
+  Game = new game_state{};
+  Game->Settings = LoadSettings(SETTINGS_FILE);
+  ApplySettings(Game->Settings);
+  StartScenes(Game->Scenes, SCENE_TITLE);
 }
 
-GAME_EXPORT void game_update() {
-    Camera2D UiCamera = GetUiCamera();
-    MergeInput(Game->PendingInput, ReadFrameInput(Game->Stick, UiCamera));
-    u32 Steps = AdvanceClock(Game->Clock, GetFrameTime());
-    for (u32 Step = 0; Step < Steps; ++Step) {
-        Game->Input = TakeInput(Game->PendingInput);
-        UpdateScenes(Game->Scenes, FIXED_STEP);
-    }
-    BeginDrawing();
-    ClearBackground(BLACK);
-    BeginMode2D(UiCamera);
-    DrawScenes(Game->Scenes);
-    EndMode2D();
-    DrawFadeOverlay(Game->Scenes);
-    EndDrawing();
+GAME_EXPORT void game_update()
+{
+  Camera2D UiCamera = GetUiCamera();
+  MergeInput(Game->PendingInput, ReadFrameInput(Game->Stick, UiCamera));
+  u32 Steps = AdvanceClock(Game->Clock, GetFrameTime());
+  for (u32 Step = 0; Step < Steps; ++Step) {
+    Game->Input = TakeInput(Game->PendingInput);
+    UpdateScenes(Game->Scenes, FIXED_STEP);
+  }
+  BeginDrawing();
+  ClearBackground(BLACK);
+  BeginMode2D(UiCamera);
+  DrawScenes(Game->Scenes);
+  EndMode2D();
+  DrawFadeOverlay(Game->Scenes);
+  EndDrawing();
 }
 
-GAME_EXPORT bool game_should_run() {
+GAME_EXPORT bool game_should_run()
+{
 #if !defined(__EMSCRIPTEN__)
-    if (WindowShouldClose()) {
-        return false;
-    }
+  if (WindowShouldClose()) { return false; }
 #endif
-    return Game->Run;
+  return Game->Run;
 }
 
-GAME_EXPORT void game_shutdown() {
-    StopScenes(Game->Scenes);
-    delete Game;
-    Game = nullptr;
+GAME_EXPORT void game_shutdown()
+{
+  StopScenes(Game->Scenes);
+  delete Game;
+  Game = nullptr;
 }
 
-GAME_EXPORT void game_shutdown_window() {
-    CloseAudioDevice();
-    CloseWindow();
+GAME_EXPORT void game_shutdown_window()
+{
+  CloseAudioDevice();
+  CloseWindow();
 }
 
-GAME_EXPORT void* game_memory() {
-    return Game;
-}
+GAME_EXPORT void *game_memory() { return Game; }
 
-GAME_EXPORT int game_memory_size() {
-    return (int)sizeof(game_state);
-}
+GAME_EXPORT int game_memory_size() { return (int)sizeof(game_state); }
 
-GAME_EXPORT void game_hot_reloaded(void* Memory) {
-    Game = (game_state*)Memory;
-}
+GAME_EXPORT void game_hot_reloaded(void *Memory) { Game = (game_state *)Memory; }
 
-GAME_EXPORT bool game_force_reload() {
-    return IsKeyPressed(KEY_F5);
-}
+GAME_EXPORT bool game_force_reload() { return IsKeyPressed(KEY_F5); }
 
-GAME_EXPORT bool game_force_restart() {
-    return IsKeyPressed(KEY_F6);
-}
+GAME_EXPORT bool game_force_restart() { return IsKeyPressed(KEY_F6); }
 
-GAME_EXPORT void game_parent_window_size_changed(int Width, int Height) {
-    SetWindowSize(Width, Height);
-}
+GAME_EXPORT void game_parent_window_size_changed(int Width, int Height) { SetWindowSize(Width, Height); }
