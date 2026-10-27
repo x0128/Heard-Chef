@@ -34,7 +34,7 @@ void PushScene(scene_stack &Stack, scene_id Scene)
     TraceLog(LOG_WARNING, "scenes: stack is full, scene %d not pushed", Scene);
     return;
   }
-  Stack.Ids[Stack.Count++] = Scene;
+  Stack.Ids.at(Stack.Count++) = Scene;
   EnterScene(Scene);
 }
 

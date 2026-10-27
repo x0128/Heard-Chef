@@ -31,13 +31,13 @@ EM_JS(void, WebLoadBytes, (const char *Name, unsigned char *Out, int Size), {
   for (var Index = 0; Index < Size; Index++) { HEAPU8[Out + Index] = Text.charCodeAt(Index); }
 });
 
-static bool WriteBytes(const char *Name, u8 *Data, u32 Size) { return WebStoreBytes(Name, Data, (int)Size) != 0; }
+static bool WriteBytes(const char *Name, u8 *Data, u32 Size) { return WebStoreBytes(Name, Data, static_cast<int>(Size)) != 0; }
 
 static u8 *ReadBytes(const char *Name, int *Bytes)
 {
   int Size = WebStoredSize(Name);
   if (Size < 0) { return nullptr; }
-  u8 *Data = (u8 *)MemAlloc((unsigned int)Size + 1);
+  u8 *Data = static_cast<u8 *>(MemAlloc(static_cast<unsigned int>(Size) + 1));
   WebLoadBytes(Name, Data, Size);
   *Bytes = Size;
   return Data;
@@ -47,7 +47,7 @@ static void FreeBytes(u8 *Data) { MemFree(Data); }
 #else
 static const char *GetSavePath(const char *Name) { return TextFormat("%s%s", GetApplicationDirectory(), Name); }
 
-static bool WriteBytes(const char *Name, u8 *Data, u32 Size) { return SaveFileData(GetSavePath(Name), Data, (int)Size); }
+static bool WriteBytes(const char *Name, u8 *Data, u32 Size) { return SaveFileData(GetSavePath(Name), Data, static_cast<int>(Size)); }
 
 static u8 *ReadBytes(const char *Name, int *Bytes)
 {
@@ -64,8 +64,8 @@ bool IsValidHeader(const file_header &Header, u32 Magic, u32 Version, u32 Size, 
 
 bool WriteVersionedFile(const char *Name, u32 Magic, u32 Version, const void *Data, u32 Size)
 {
-  u32 Total = (u32)sizeof(file_header) + Size;
-  u8 *Buffer = (u8 *)MemAlloc(Total);
+  u32 Total = static_cast<u32>(sizeof(file_header)) + Size;
+  u8 *Buffer = static_cast<u8 *>(MemAlloc(Total));
   file_header Header = { .Magic = Magic, .Version = Version, .Size = Size };
   memcpy(Buffer, &Header, sizeof(file_header));
   memcpy(Buffer + sizeof(file_header), Data, Size);
@@ -78,12 +78,12 @@ bool ReadVersionedFile(const char *Name, u32 Magic, u32 Version, void *Data, u32
 {
   int Bytes = 0;
   u8 *File = ReadBytes(Name, &Bytes);
-  if (!File) { return false; }
+  if (File == nullptr) { return false; }
   bool Valid = false;
-  if (Bytes >= (int)sizeof(file_header)) {
+  if (Bytes >= static_cast<int>(sizeof(file_header))) {
     file_header Header;
     memcpy(&Header, File, sizeof(file_header));
-    Valid = IsValidHeader(Header, Magic, Version, Size, (u32)Bytes);
+    Valid = IsValidHeader(Header, Magic, Version, Size, static_cast<u32>(Bytes));
   }
   if (Valid) { memcpy(Data, File + sizeof(file_header), Size); }
   FreeBytes(File);

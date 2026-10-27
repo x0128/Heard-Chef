@@ -54,7 +54,7 @@ void DrawScene(scene_id Scene) { SCENE_FUNCS.at(Scene).Draw(); }
 GAME_EXPORT void GameInitWindow()
 {
   SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
-  InitWindow((int)UI_WIDTH, (int)UI_HEIGHT, GAME_TITLE);
+  InitWindow(static_cast<int>(UI_WIDTH), static_cast<int>(UI_HEIGHT), GAME_TITLE);
 #if !defined(__EMSCRIPTEN__)
   SetWindowMinSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
 #endif
@@ -111,7 +111,7 @@ GAME_EXPORT void GameShutdownWindow()
 
 GAME_EXPORT void *GameMemory() { return Game; }
 
-GAME_EXPORT int GameMemorySize() { return (int)sizeof(game_state); }
+GAME_EXPORT int GameMemorySize() { return static_cast<int>(sizeof(game_state)); }
 
 GAME_EXPORT void GameHotReloaded(void *Memory) { Game = static_cast<game_state *>(Memory); }
 
