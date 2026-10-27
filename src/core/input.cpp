@@ -22,6 +22,8 @@ static bool IsAnyGamepadButtonPressed()
 frame_input ReadFrameInput(stick_state &Stick, const Camera2D &UiCamera)
 {
   frame_input Input = {};
+  while (GetKeyPressed() != 0) { Input.AnyPressed = true; }
+
   Input.Pressed[ACTION_UP] = IsKeyTapped(KEY_UP) || IsKeyTapped(KEY_W);
   Input.Pressed[ACTION_DOWN] = IsKeyTapped(KEY_DOWN) || IsKeyTapped(KEY_S);
   Input.Pressed[ACTION_LEFT] = IsKeyTapped(KEY_LEFT) || IsKeyTapped(KEY_A);
@@ -29,8 +31,6 @@ frame_input ReadFrameInput(stick_state &Stick, const Camera2D &UiCamera)
   Input.Pressed[ACTION_CONFIRM] = IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE);
   Input.Pressed[ACTION_BACK] = IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_BACKSPACE);
   Input.Pressed[ACTION_PAUSE] = IsKeyPressed(KEY_ESCAPE);
-
-  while (GetKeyPressed() != 0) { Input.AnyPressed = true; }
 
   if (IsGamepadAvailable(0)) {
     Input.Pressed[ACTION_UP] |= IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_UP);

@@ -18,11 +18,11 @@ static std::span<const menu_item> GetMainMenuItems(menu_item_list &Out)
 {
   bool HasSave = Game->MainMenu.HasSave;
   u32 Count = 0;
-  if (HasSave) { Out[Count++] = { .Label = "Continue", .Action = MAIN_CONTINUE, .Kind = ITEM_PRIMARY }; }
-  Out[Count++] = { .Label = "New game", .Action = MAIN_NEW_GAME, .Kind = HasSave ? ITEM_BUTTON : ITEM_PRIMARY };
-  Out[Count++] = { .Label = "Settings", .Action = MAIN_SETTINGS, .Kind = ITEM_BUTTON };
+  if (HasSave) { Out.at(Count++) = { .Label = "Continue", .Action = MAIN_CONTINUE, .Kind = ITEM_PRIMARY }; }
+  Out.at(Count++) = { .Label = "New game", .Action = MAIN_NEW_GAME, .Kind = HasSave ? ITEM_BUTTON : ITEM_PRIMARY };
+  Out.at(Count++) = { .Label = "Settings", .Action = MAIN_SETTINGS, .Kind = ITEM_BUTTON };
 #if !defined(__EMSCRIPTEN__)
-  Out[Count++] = { .Label = "Exit", .Action = MAIN_EXIT, .Kind = ITEM_FOOTER };
+  Out.at(Count++) = { .Label = "Exit", .Action = MAIN_EXIT, .Kind = ITEM_FOOTER };
 #endif
   return std::span(Out).first(Count);
 }
@@ -33,7 +33,7 @@ void EnterMainMenu()
   Game->MainMenu.HasSave = HasPlaySave();
 }
 
-void UpdateMainMenu(f32)
+void UpdateMainMenu(f32 /*Deltatime*/)
 {
   menu_item_list Items;
   switch (UpdateMenu(Game->MainMenu.Menu, GetMainMenuItems(Items), Game->Input, NO_ACTION)) {

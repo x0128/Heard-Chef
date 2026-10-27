@@ -46,7 +46,7 @@ void PopScene(scene_stack &Stack)
     return;
   }
   --Stack.Count;
-  ExitScene(Stack.Ids[Stack.Count]);
+  ExitScene(Stack.Ids.at(Stack.Count));
 }
 
 void StopScenes(scene_stack &Stack)
@@ -85,7 +85,7 @@ void UpdateScenes(scene_stack &Stack, f32 Deltatime)
 
 void DrawScenes(const scene_stack &Stack)
 {
-  for (u32 Index = 0; Index < Stack.Count; ++Index) { DrawScene(Stack.Ids[Index]); }
+  for (u32 Index = 0; Index < Stack.Count; ++Index) { DrawScene(Stack.Ids.at(Index)); }
 }
 
 void DrawFadeOverlay(const scene_stack &Stack)
@@ -94,7 +94,7 @@ void DrawFadeOverlay(const scene_stack &Stack)
   if (Amount > 0.F) { DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, Amount)); }
 }
 
-scene_id GetTopScene(const scene_stack &Stack) { return Stack.Ids[Stack.Count > 0 ? Stack.Count - 1 : 0]; }
+scene_id GetTopScene(const scene_stack &Stack) { return Stack.Ids.at(Stack.Count > 0 ? Stack.Count - 1 : 0); }
 
 f32 GetFadeAmount(const scene_stack &Stack)
 {
