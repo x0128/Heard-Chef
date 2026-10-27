@@ -6,7 +6,7 @@
 #include "core/settings.h"
 #include "game/scene_list.h"
 
-constexpr const char *GAME_TITLE = "GAME TITLE";
+constexpr const char *GAME_TITLE = "Heard, Chef";
 constexpr const char *SAVE_FILE = "game_save.bin";
 constexpr const char *SETTINGS_FILE = "game_settings.bin";
 
